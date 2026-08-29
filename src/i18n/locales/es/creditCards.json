@@ -68,5 +68,55 @@
     "CREDIT_CARD_PURCHASE": "Compra",
     "CREDIT_CARD_PAYMENT": "Pago"
   },
-  "noCategory": "Sin categoría"
+  "noCategory": "Sin categoría",
+  "installments": {
+    "heading": "Planes MSI/MCI",
+    "newPlan": "Comprar a MSI/MCI",
+    "empty": "Todavía no tienes compras a meses en esta tarjeta.",
+    "loadError": "No se pudieron cargar los planes de esta tarjeta.",
+    "planTypes": {
+      "MSI": "MSI",
+      "MCI": "MCI"
+    },
+    "statuses": {
+      "ACTIVE": "Activo",
+      "COMPLETED": "Liquidado",
+      "CANCELLED": "Cancelado"
+    },
+    "installmentStatuses": {
+      "PENDING": "Pendiente",
+      "PAID": "Pagada"
+    },
+    "installmentAmount": "Cuota mensual",
+    "financedBalance": "Saldo financiado",
+    "paidOf": "{{paid}} de {{total}} cuotas pagadas",
+    "nextInstallment": "Próxima cuota",
+    "noNextInstallment": "Sin cuotas pendientes",
+    "endDate": "Termina",
+    "schedule": {
+      "number": "#",
+      "dueDate": "Vence",
+      "amount": "Monto",
+      "status": "Estado",
+      "action": ""
+    },
+    "markAsPaid": "Marcar como pagada",
+    "markAsPaidHint": "Esto solo registra que ya cubriste esta cuota — el dinero sale de tu cuenta cuando pagas la tarjeta.",
+    "dialog": {
+      "title": "Comprar a MSI/MCI",
+      "amount": "Monto original",
+      "date": "Fecha",
+      "merchant": "Comercio",
+      "installmentCount": "Número de cuotas",
+      "installmentCountHint": "De 2 a 60",
+      "interestRate": "Tasa de interés mensual (%)",
+      "interestRateHint": "0 = meses sin intereses (MSI)",
+      "category": "Categoría",
+      "noCategoryOption": "Sin categoría",
+      "newCategoryOption": "+ Nueva categoría…",
+      "description": "Descripción",
+      "reference": "Referencia (opcional)",
+      "submit": "Registrar"
+    }
+  }
 }

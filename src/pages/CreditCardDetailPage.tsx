@@ -19,6 +19,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
+import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import PaymentsIcon from '@mui/icons-material/Payments'
 import { getCreditCard } from '../api/creditCardsApi'
 import { listCategories } from '../api/categoriesApi'
@@ -29,12 +30,15 @@ import StatTile from '../components/dataviz/StatTile'
 import EmptyChartState from '../components/dataviz/EmptyChartState'
 import CreditCardPurchaseDialog from '../components/creditCards/CreditCardPurchaseDialog'
 import CreditCardPaymentDialog from '../components/creditCards/CreditCardPaymentDialog'
+import CreateInstallmentPlanDialog from '../components/creditCards/CreateInstallmentPlanDialog'
+import InstallmentPlansSection from '../components/creditCards/InstallmentPlansSection'
 
 export default function CreditCardDetailPage() {
   const { t } = useTranslation('creditCards')
   const { id } = useParams<{ id: string }>()
   const [purchaseOpen, setPurchaseOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
+  const [installmentPlanOpen, setInstallmentPlanOpen] = useState(false)
 
   const { data: card, isLoading, isError } = useQuery({
     queryKey: ['creditCard', id],
@@ -83,6 +87,9 @@ export default function CreditCardDetailPage() {
           <Button variant="outlined" startIcon={<AddShoppingCartIcon />} onClick={() => setPurchaseOpen(true)}>
             {t('detail.recordPurchase')}
           </Button>
+          <Button variant="outlined" startIcon={<EventRepeatIcon />} onClick={() => setInstallmentPlanOpen(true)}>
+            {t('installments.newPlan')}
+          </Button>
           <Button variant="contained" startIcon={<PaymentsIcon />} onClick={() => setPaymentOpen(true)}>
             {t('detail.payCard')}
           </Button>
@@ -112,6 +119,13 @@ export default function CreditCardDetailPage() {
           <StatTile label={t('nextPaymentDueDate')} value={formatDateShort(card.nextPaymentDueDate)} />
         </Grid>
       </Grid>
+
+      <Typography variant="h6" component="h2" gutterBottom>
+        {t('installments.heading')}
+      </Typography>
+      <Box sx={{ mb: 4 }}>
+        <InstallmentPlansSection cardId={card.id} currency={card.currency} />
+      </Box>
 
       <Typography variant="h6" component="h2" gutterBottom>
         {t('detail.movements')}
@@ -188,6 +202,12 @@ export default function CreditCardDetailPage() {
         cardId={card.id}
         cardAccountId={card.accountId}
         onClose={() => setPaymentOpen(false)}
+      />
+      <CreateInstallmentPlanDialog
+        open={installmentPlanOpen}
+        cardId={card.id}
+        cardAccountId={card.accountId}
+        onClose={() => setInstallmentPlanOpen(false)}
       />
     </Box>
   )
