@@ -4,6 +4,8 @@ import { initReactI18next } from 'react-i18next'
 import common from './locales/es/common.json'
 import auth from './locales/es/auth.json'
 import dashboard from './locales/es/dashboard.json'
+import accounts from './locales/es/accounts.json'
+import transactions from './locales/es/transactions.json'
 
 /**
  * Solo español por ahora (plan.md, sección 17.3), con namespaces por
@@ -15,11 +17,11 @@ void i18next
   .use(initReactI18next)
   .init({
     resources: {
-      es: { common, auth, dashboard },
+      es: { common, auth, dashboard, accounts, transactions },
     },
     lng: 'es',
     fallbackLng: 'es',
-    ns: ['common', 'auth', 'dashboard'],
+    ns: ['common', 'auth', 'dashboard', 'accounts', 'transactions'],
     defaultNS: 'common',
     interpolation: { escapeValue: false },
   })

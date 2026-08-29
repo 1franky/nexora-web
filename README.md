@@ -86,19 +86,27 @@ src/
 ├── app/          App, router, QueryClient
 ├── layout/       AppLayout (barra + navegación), AuthLayout
 ├── theme/        claro/oscuro/sistema (persistido), tema de Material UI
-├── i18n/         español, por namespace/módulo (common, auth, dashboard, ...)
-└── pages/        LoginPage, RegisterPage, HomePage, páginas de cada módulo
+├── i18n/         español, por namespace/módulo (common, auth, dashboard, accounts, transactions, ...)
+└── pages/        LoginPage, RegisterPage, DashboardPage, AccountsPage, TransactionsPage, páginas de cada módulo
 ```
 
 Login con JWT real contra `nexora-api` (B7): access token corto + refresh token que se rota automáticamente cuando una petición responde 401. Los tokens se guardan en `localStorage` — simplificación conocida de un SPA sin backend-for-frontend (expuesto a XSS); el access token dura poco para acotar el riesgo.
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)** y **W2 (dashboard)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, y el dashboard completo (patrimonio neto, disponible, deuda/crédito de tarjetas, resumen del mes con selector de periodo, gastos/ingresos por categoría, evolución de patrimonio y de gastos a 6 meses, próximos pagos, MSI activos y últimos movimientos — cada gráfica con su vista de tabla equivalente). El resto de los módulos (Cuentas, Movimientos, Tarjetas, Categorías, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 (arquitectura base)**, **W2 (dashboard)** y **W3 (cuentas y movimientos)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas (crear, listar, saldo por cuenta en su propia moneda) y movimientos (ingresos, gastos y transferencias, con categorización y creación rápida de categoría desde el propio formulario). El resto de los módulos (Tarjetas, Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
 El dashboard sigue la skill `dataviz`: cada gráfica compara **magnitud**, no identidad — un solo color (azul) en todas, nunca una paleta categórica por categoría (eso gastaría el canal de identidad en algo que el largo de la barra ya muestra). Etiquetas directas siempre visibles donde hay espacio, crosshair + tooltip en la línea, tooltip por barra en las de barras, y **toggle de vista de tabla** en cada tarjeta (ningún valor depende solo de hover o de color para poder leerse). Paleta y specs en `src/components/dataviz/`.
+
+### Cuentas y movimientos (W3)
+
+"Cuentas" y "Movimientos" son responsabilidades separadas: la primera crea/lista cuentas y sus saldos (cada una en su propia moneda — `formatCurrencyIn` en `dataviz/format.ts`, distinto de `formatCurrency` que el dashboard usa fijo en MXN por ser un agregado en la moneda base); la segunda es donde se ven y registran ingresos, gastos y transferencias, con un selector de cuenta (clic en una cuenta de la lista te manda aquí, con esa cuenta ya seleccionada vía `?accountId=`).
+
+Una transferencia crea dos filas (`outgoing`/`incoming`) que comparten el mismo `type` (`TRANSFER`) — lo único que distingue cuál entra y cuál sale es `balanceEffect` (con signo), que `nexora-api` calculaba desde B2 pero no exponía en el DTO hasta un fix dedicado motivado por esta misma fase. Sin ese campo no había forma de pintar el monto en rojo/verde ni de resolver el nombre de la "cuenta relacionada" en la tabla.
+
+La categorización es mínima a propósito: la gestión completa de categorías (editar, archivar) sigue siendo su propio módulo, todavía "próximamente" — lo que hay aquí es solo lo necesario para no quedar bloqueado al categorizar un movimiento (elegir una existente o crear una nueva con nombre + tipo implícito, sin salir del formulario).
 
 ## Repositorios relacionados
 
