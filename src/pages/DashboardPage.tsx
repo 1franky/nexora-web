@@ -36,6 +36,21 @@ function currentMonth(): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 }
 
+/**
+ * "yyyy-MM" completo y con mes 01-12. El input nativo `type="month"` no
+ * garantiza esto en cada onChange: mientras se edita (p. ej. al borrar el
+ * mes para escribir uno nuevo) puede reportar "" o un valor intermedio —
+ * varía por navegador. Sin este filtro, ese valor a medio escribir se
+ * manda tal cual a la API (`?month=...`), que responde 400 ante cualquier
+ * mes fuera de 01-12 o mal formado, y la página lo muestra como un error
+ * genérico en vez de simplemente esperar a que termines de escribir.
+ */
+const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/
+
+function isCompleteMonth(value: string): boolean {
+  return MONTH_PATTERN.test(value)
+}
+
 function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
@@ -48,13 +63,24 @@ const GRID_SIZE = {
 export default function DashboardPage() {
   const { t } = useTranslation('dashboard')
   const { user } = useAuth()
-  const [month, setMonth] = useState(currentMonth())
+  // `monthInput` es lo que el campo muestra, siempre (para no pelear con la
+  // edición nativa); `committedMonth` es lo que de verdad dispara la
+  // consulta, y solo avanza cuando monthInput es un mes completo y válido.
+  const [monthInput, setMonthInput] = useState(currentMonth())
+  const [committedMonth, setCommittedMonth] = useState(currentMonth())
   const [customizeOpen, setCustomizeOpen] = useState(false)
   const { layout, visibleWidgetIds, toggleVisible, move, resetToDefault } = useDashboardLayout()
 
+  const handleMonthChange = (value: string) => {
+    setMonthInput(value)
+    if (isCompleteMonth(value)) {
+      setCommittedMonth(value)
+    }
+  }
+
   const { data, isLoading, isFetching, isError } = useQuery({
-    queryKey: ['dashboard', month],
-    queryFn: () => getDashboardSummary(month),
+    queryKey: ['dashboard', committedMonth],
+    queryFn: () => getDashboardSummary(committedMonth),
     placeholderData: keepPreviousData,
   })
 
@@ -252,8 +278,8 @@ export default function DashboardPage() {
           type="month"
           size="small"
           label={t('monthSummary.monthLabel')}
-          value={month}
-          onChange={(event) => setMonth(event.target.value)}
+          value={monthInput}
+          onChange={(event) => handleMonthChange(event.target.value)}
           slotProps={{ inputLabel: { shrink: true } }}
         />
       </Box>
