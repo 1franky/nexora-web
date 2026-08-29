@@ -94,7 +94,7 @@ Login con JWT real contra `nexora-api` (B7): access token corto + refresh token 
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)**, **W4 (tarjetas)**, **W5 (MSI/MCI)** y **W6 (reportes)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas) y reportes por rango de fechas. Quedan **W7 (dashboard personalizable)** y **W8 (configuración)**; el resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)**, **W4 (tarjetas)**, **W5 (MSI/MCI)**, **W6 (reportes)** y **W7 (dashboard personalizable)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas) y reportes por rango de fechas. Queda **W8 (configuración)**; el resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
@@ -121,6 +121,10 @@ A diferencia de Cuentas/Movimientos, aquí sí hay una página de detalle por ta
 ### Reportes (W6)
 
 A diferencia del dashboard (siempre mes calendario o una ventana fija de 6 meses), "Reportes" agrega el mismo ledger de `Transaction` por un **rango de fechas libre** (`GET /api/v1/reports?from=&to=`), acotable a una cuenta o a un tipo de movimiento — filtros que también agregado en `nexora-api` en este mismo cambio, motivado por esta página. Reutiliza los mismos componentes de `dataviz` que el dashboard (gráficas de categoría y evolución mensual con su vista de tabla), y una tabla de movimientos igual a la de Movimientos pero cruzando todas las cuentas del usuario a la vez (con columna de cuenta, y cada monto en su propia moneda).
+
+### Dashboard personalizable (W7)
+
+Puramente frontend: `nexora-api` ya expone todas las métricas en una sola respuesta (`GET /dashboard`), así que "agregar, eliminar y reordenar widgets" (`plan.md`, sección 10) es solo cuestión de qué se renderiza y en qué orden, no de qué se pide al backend. Cada sección del dashboard (`src/components/dashboard/widgetDefinitions.ts`) es un widget independiente con un `id` y un tamaño (`quarter`/`half`); `useDashboardLayout` guarda el orden y la visibilidad en `localStorage` (mismo patrón que la preferencia de tema), y el diálogo "Personalizar" los administra con checkboxes y flechas subir/bajar — sin drag-and-drop, para no sumar una dependencia nueva solo por esto. El selector de mes queda fuera del sistema de widgets a propósito: no es contenido que se pueda ocultar, es el control que decide qué dato ven los widgets que dependen del periodo.
 
 ## Repositorios relacionados
 
