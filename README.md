@@ -87,14 +87,14 @@ src/
 ├── layout/       AppLayout (barra + navegación), AuthLayout
 ├── theme/        claro/oscuro/sistema (persistido), tema de Material UI
 ├── i18n/         español, por namespace/módulo (common, auth, dashboard, accounts, transactions, ...)
-└── pages/        LoginPage, RegisterPage, DashboardPage, AccountsPage, TransactionsPage, páginas de cada módulo
+└── pages/        LoginPage, RegisterPage, DashboardPage, AccountsPage, TransactionsPage, CreditCardsPage, CreditCardDetailPage, páginas de cada módulo
 ```
 
 Login con JWT real contra `nexora-api` (B7): access token corto + refresh token que se rota automáticamente cuando una petición responde 401. Los tokens se guardan en `localStorage` — simplificación conocida de un SPA sin backend-for-frontend (expuesto a XSS); el access token dura poco para acotar el riesgo.
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)**, **W2 (dashboard)** y **W3 (cuentas y movimientos)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas (crear, listar, saldo por cuenta en su propia moneda) y movimientos (ingresos, gastos y transferencias, con categorización y creación rápida de categoría desde el propio formulario). El resto de los módulos (Tarjetas, Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)** y **W4 (tarjetas)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas, movimientos (ingresos, gastos y transferencias) y tarjetas de crédito (alta, compras, pagos, deuda/crédito disponible calculados por el backend). MSI/MCI (W5) queda para la siguiente fase: W4 cubre solo compras "de contado" con tarjeta. El resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
@@ -107,6 +107,12 @@ El dashboard sigue la skill `dataviz`: cada gráfica compara **magnitud**, no id
 Una transferencia crea dos filas (`outgoing`/`incoming`) que comparten el mismo `type` (`TRANSFER`) — lo único que distingue cuál entra y cuál sale es `balanceEffect` (con signo), que `nexora-api` calculaba desde B2 pero no exponía en el DTO hasta un fix dedicado motivado por esta misma fase. Sin ese campo no había forma de pintar el monto en rojo/verde ni de resolver el nombre de la "cuenta relacionada" en la tabla.
 
 La categorización es mínima a propósito: la gestión completa de categorías (editar, archivar) sigue siendo su propio módulo, todavía "próximamente" — lo que hay aquí es solo lo necesario para no quedar bloqueado al categorizar un movimiento (elegir una existente o crear una nueva con nombre + tipo implícito, sin salir del formulario).
+
+### Tarjetas (W4)
+
+A diferencia de Cuentas/Movimientos, aquí sí hay una página de detalle por tarjeta (`/credit-cards/:id`): una compra y un pago de tarjeta usan endpoints y formularios propios (`POST /credit-cards/{id}/purchases` con comercio, `/payments` con cuenta de origen), distintos de los de Movimientos, así que no hay UI que duplicar al separarlos — y la tarjeta necesita mostrar su propio resumen (límite, deuda, disponible, próximo corte/pago, ya calculados por el backend) que una vista genérica de movimientos no tendría dónde poner. El diálogo de pago excluye del selector de cuenta de origen a las demás tarjetas (regla de negocio: no se paga una tarjeta con otra tarjeta). Reutiliza `QuickCreateCategoryDialog` de Movimientos para categorizar una compra sin salir del formulario.
+
+MSI/MCI es la siguiente fase (W5) — W4 solo cubre compras de contado con la tarjeta.
 
 ## Repositorios relacionados
 
