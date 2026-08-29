@@ -54,5 +54,15 @@
     "dueDate": "Vence",
     "expectedPayment": "Pago estimado",
     "month": "Mes"
+  },
+  "customize": {
+    "button": "Personalizar",
+    "title": "Personalizar dashboard",
+    "moveUp": "Subir {{widget}}",
+    "moveDown": "Bajar {{widget}}",
+    "toggleVisible": "Mostrar u ocultar {{widget}}",
+    "reset": "Restablecer",
+    "done": "Listo",
+    "empty": "Ocultaste todos los widgets. Usa \"Personalizar\" para volver a mostrar alguno."
   }
 }
