@@ -16,7 +16,8 @@
   "theme": {
     "light": "Claro",
     "dark": "Oscuro",
-    "menuLabel": "Tema"
+    "switchToLight": "Cambiar a modo claro",
+    "switchToDark": "Cambiar a modo oscuro"
   },
   "actions": {
     "save": "Guardar",

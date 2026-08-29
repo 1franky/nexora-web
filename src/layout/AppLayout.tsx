@@ -30,7 +30,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useAuth } from '../auth/AuthContext'
 import { listNotifications } from '../api/notificationsApi'
-import ThemeModeMenu from './ThemeModeMenu'
+import ThemeModeSwitch from './ThemeModeSwitch'
 
 const DRAWER_WIDTH = 260
 
@@ -120,7 +120,7 @@ export default function AppLayout() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {user?.displayName}
           </Typography>
-          <ThemeModeMenu />
+          <ThemeModeSwitch />
           <Tooltip title={t('nav.logout')}>
             <IconButton color="inherit" onClick={() => logout()} aria-label={t('nav.logout')}>
               <LogoutIcon />
