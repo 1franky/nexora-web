@@ -1,0 +1,18 @@
+{
+  "title": "Categorías",
+  "expenses": "Gastos",
+  "income": "Ingresos",
+  "newCategory": "Nueva",
+  "emptyExpenses": "No tienes categorías de gasto.",
+  "emptyIncome": "No tienes categorías de ingreso.",
+  "loadError": "No se pudieron cargar las categorías.",
+  "rename": "Renombrar",
+  "archive": "Archivar",
+  "activate": "Reactivar",
+  "archived": "Archivada",
+  "renameDialog": {
+    "title": "Renombrar categoría",
+    "name": "Nombre",
+    "save": "Guardar"
+  }
+}

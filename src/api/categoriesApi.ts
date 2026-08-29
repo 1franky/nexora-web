@@ -16,11 +16,6 @@ export interface CreateCategoryRequest {
   type: CategoryType
 }
 
-/**
- * La gestión completa de categorías (editar, archivar) es su propio módulo
- * ("Categorías" en la navegación, todavía "próximamente"). Por ahora solo se
- * necesita leer y crear, para poder categorizar movimientos desde W3.
- */
 export async function listCategories(): Promise<Category[]> {
   const { data } = await apiClient.get<Category[]>('/categories')
   return data
@@ -28,5 +23,22 @@ export async function listCategories(): Promise<Category[]> {
 
 export async function createCategory(request: CreateCategoryRequest): Promise<Category> {
   const { data } = await apiClient.post<Category>('/categories', request)
+  return data
+}
+
+/** Solo el nombre: el tipo no se puede editar una vez creada la categoría (ver nexora-api). */
+export async function renameCategory(id: string, name: string): Promise<Category> {
+  const { data } = await apiClient.patch<Category>(`/categories/${id}`, { name })
+  return data
+}
+
+/** No borra la categoría (sigue existiendo para lo ya categorizado); solo deja de poder usarse en movimientos nuevos. */
+export async function archiveCategory(id: string): Promise<Category> {
+  const { data } = await apiClient.post<Category>(`/categories/${id}/archive`)
+  return data
+}
+
+export async function activateCategory(id: string): Promise<Category> {
+  const { data } = await apiClient.post<Category>(`/categories/${id}/activate`)
   return data
 }

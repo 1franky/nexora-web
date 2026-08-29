@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Alert from '@mui/material/Alert'
@@ -30,17 +30,19 @@ function today(): string {
 
 interface TransactionFormDialogProps {
   open: boolean
-  accountId: string
-  /** Resto de cuentas activas del usuario, para elegir el destino de una transferencia. */
-  otherActiveAccounts: Account[]
+  /** Cuentas activas del usuario, para elegir en cuál registrar el movimiento (y el destino de una transferencia). */
+  accounts: Account[]
+  /** Precarga la cuenta cuando el filtro de Movimientos ya está en una cuenta específica; vacío ("todas las cuentas") no precarga ninguna. */
+  defaultAccountId?: string
   onClose: () => void
 }
 
-export default function TransactionFormDialog({ open, accountId, otherActiveAccounts, onClose }: TransactionFormDialogProps) {
+export default function TransactionFormDialog({ open, accounts, defaultAccountId, onClose }: TransactionFormDialogProps) {
   const { t } = useTranslation('transactions')
   const queryClient = useQueryClient()
 
   const [kind, setKind] = useState<MovementKind>('EXPENSE')
+  const [accountId, setAccountId] = useState('')
   const [amount, setAmount] = useState('')
   const [date, setDate] = useState(today())
   const [categoryId, setCategoryId] = useState('')
@@ -50,12 +52,20 @@ export default function TransactionFormDialog({ open, accountId, otherActiveAcco
   const [error, setError] = useState<string | null>(null)
   const [quickCreateOpen, setQuickCreateOpen] = useState(false)
 
+  // Cada vez que se abre, precarga la cuenta del filtro actual (o ninguna, si el filtro es "todas las cuentas").
+  useEffect(() => {
+    if (open) setAccountId(defaultAccountId ?? '')
+  }, [open, defaultAccountId])
+
   const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: listCategories, enabled: open })
   const categoryType = kind === 'INCOME' ? 'INCOME' : 'EXPENSE'
-  const categoriesForKind = (categories ?? []).filter((category) => category.type === categoryType)
+  // Una categoría archivada sigue existiendo (para lo ya categorizado) pero nexora-api rechaza usarla en un movimiento nuevo.
+  const categoriesForKind = (categories ?? []).filter((category) => category.type === categoryType && category.status === 'ACTIVE')
+  const otherActiveAccounts = accounts.filter((account) => account.id !== accountId)
 
   const resetForm = () => {
     setKind('EXPENSE')
+    setAccountId(defaultAccountId ?? '')
     setAmount('')
     setDate(today())
     setCategoryId('')
@@ -70,10 +80,11 @@ export default function TransactionFormDialog({ open, accountId, otherActiveAcco
     onClose()
   }
 
-  const invalidateAfterMutation = (extraAccountId?: string) => {
+  // Con la cuenta ahora elegible dentro del diálogo (en vez de fija por prop), invalidar por prefijo
+  // cubre cualquier combinación de filtro ['transactions', accountId | undefined] que la página tenga cacheada.
+  const invalidateAfterMutation = () => {
     queryClient.invalidateQueries({ queryKey: ['accounts'] })
-    queryClient.invalidateQueries({ queryKey: ['transactions', accountId] })
-    if (extraAccountId) queryClient.invalidateQueries({ queryKey: ['transactions', extraAccountId] })
+    queryClient.invalidateQueries({ queryKey: ['transactions'] })
   }
 
   const simpleMutation = useMutation({
@@ -89,7 +100,7 @@ export default function TransactionFormDialog({ open, accountId, otherActiveAcco
   const transferMutation = useMutation({
     mutationFn: createTransfer,
     onSuccess: () => {
-      invalidateAfterMutation(toAccountId)
+      invalidateAfterMutation()
       resetForm()
       onClose()
     },
@@ -100,7 +111,7 @@ export default function TransactionFormDialog({ open, accountId, otherActiveAcco
   const parsedAmount = Number(amount)
   const amountValid = Number.isFinite(parsedAmount) && parsedAmount > 0
   const transferValid = kind !== 'TRANSFER' || (toAccountId !== '' && toAccountId !== accountId)
-  const canSubmit = amountValid && date !== '' && transferValid
+  const canSubmit = accountId !== '' && amountValid && date !== '' && transferValid
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -138,6 +149,24 @@ export default function TransactionFormDialog({ open, accountId, otherActiveAcco
           <DialogContent>
             <Stack spacing={2}>
               {error && <Alert severity="error">{error}</Alert>}
+
+              <TextField
+                select
+                label={t('dialog.account')}
+                value={accountId}
+                onChange={(event) => {
+                  setAccountId(event.target.value)
+                  if (event.target.value === toAccountId) setToAccountId('')
+                }}
+                required
+                fullWidth
+              >
+                {accounts.map((account) => (
+                  <MenuItem key={account.id} value={account.id}>
+                    {account.name} ({account.currency})
+                  </MenuItem>
+                ))}
+              </TextField>
 
               <ToggleButtonGroup
                 value={kind}
