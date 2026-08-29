@@ -1,0 +1,72 @@
+{
+  "title": "Tarjetas",
+  "newCard": "Nueva tarjeta",
+  "empty": "Todavía no tienes tarjetas de crédito. Crea la primera para registrar tus compras y pagos.",
+  "loadError": "No se pudieron cargar tus tarjetas.",
+  "archived": "Archivada",
+  "limit": "Límite",
+  "debt": "Deuda",
+  "available": "Disponible",
+  "closingDay": "Corte",
+  "paymentDueDay": "Pago",
+  "nextClosingDate": "Próximo corte",
+  "nextPaymentDueDate": "Próximo pago",
+  "dialog": {
+    "title": "Nueva tarjeta",
+    "name": "Nombre",
+    "bank": "Banco",
+    "last4": "Últimos 4 dígitos",
+    "last4Hint": "Solo para identificarla, nunca el número completo.",
+    "creditLimit": "Límite de crédito",
+    "closingDay": "Día de corte",
+    "paymentDueDay": "Día límite de pago",
+    "dayHint": "Del 1 al 28",
+    "currency": "Moneda",
+    "currencyHint": "Código ISO 4217 de 3 letras, ej. MXN",
+    "currencyInvalid": "Usa un código de 3 letras mayúsculas (ej. MXN).",
+    "create": "Crear tarjeta"
+  },
+  "detail": {
+    "notFound": "No se encontró la tarjeta.",
+    "recordPurchase": "Registrar compra",
+    "payCard": "Pagar tarjeta",
+    "movements": "Movimientos",
+    "empty": "Todavía no hay compras ni pagos en esta tarjeta.",
+    "loadError": "No se pudieron cargar los movimientos de la tarjeta."
+  },
+  "purchaseDialog": {
+    "title": "Registrar compra",
+    "amount": "Monto",
+    "date": "Fecha",
+    "merchant": "Comercio",
+    "category": "Categoría",
+    "noCategoryOption": "Sin categoría",
+    "newCategoryOption": "+ Nueva categoría…",
+    "description": "Descripción",
+    "reference": "Referencia (opcional)",
+    "submit": "Registrar"
+  },
+  "paymentDialog": {
+    "title": "Pagar tarjeta",
+    "fromAccount": "Cuenta de origen",
+    "noAccountsAvailable": "Necesitas otra cuenta activa (no una tarjeta) para poder pagar.",
+    "amount": "Monto",
+    "date": "Fecha",
+    "description": "Descripción",
+    "reference": "Referencia (opcional)",
+    "submit": "Pagar"
+  },
+  "columns": {
+    "date": "Fecha",
+    "type": "Tipo",
+    "merchantOrSource": "Comercio / origen",
+    "category": "Categoría",
+    "description": "Descripción",
+    "amount": "Monto"
+  },
+  "types": {
+    "CREDIT_CARD_PURCHASE": "Compra",
+    "CREDIT_CARD_PAYMENT": "Pago"
+  },
+  "noCategory": "Sin categoría"
+}
