@@ -87,14 +87,14 @@ src/
 ├── layout/       AppLayout (barra + navegación), AuthLayout
 ├── theme/        claro/oscuro/sistema (persistido), tema de Material UI
 ├── i18n/         español, por namespace/módulo (common, auth, dashboard, accounts, transactions, ...)
-└── pages/        LoginPage, RegisterPage, DashboardPage, AccountsPage, TransactionsPage, CreditCardsPage, CreditCardDetailPage, páginas de cada módulo
+└── pages/        LoginPage, RegisterPage, DashboardPage, AccountsPage, TransactionsPage, CreditCardsPage, CreditCardDetailPage (incluye MSI/MCI)
 ```
 
 Login con JWT real contra `nexora-api` (B7): access token corto + refresh token que se rota automáticamente cuando una petición responde 401. Los tokens se guardan en `localStorage` — simplificación conocida de un SPA sin backend-for-frontend (expuesto a XSS); el access token dura poco para acotar el riesgo.
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)** y **W4 (tarjetas)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas, movimientos (ingresos, gastos y transferencias) y tarjetas de crédito (alta, compras, pagos, deuda/crédito disponible calculados por el backend). MSI/MCI (W5) queda para la siguiente fase: W4 cubre solo compras "de contado" con tarjeta. El resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)**, **W4 (tarjetas)** y **W5 (MSI/MCI)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos) y compras a meses (MSI/MCI, con calendario de cuotas). El resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
@@ -112,7 +112,11 @@ La categorización es mínima a propósito: la gestión completa de categorías 
 
 A diferencia de Cuentas/Movimientos, aquí sí hay una página de detalle por tarjeta (`/credit-cards/:id`): una compra y un pago de tarjeta usan endpoints y formularios propios (`POST /credit-cards/{id}/purchases` con comercio, `/payments` con cuenta de origen), distintos de los de Movimientos, así que no hay UI que duplicar al separarlos — y la tarjeta necesita mostrar su propio resumen (límite, deuda, disponible, próximo corte/pago, ya calculados por el backend) que una vista genérica de movimientos no tendría dónde poner. El diálogo de pago excluye del selector de cuenta de origen a las demás tarjetas (regla de negocio: no se paga una tarjeta con otra tarjeta). Reutiliza `QuickCreateCategoryDialog` de Movimientos para categorizar una compra sin salir del formulario.
 
-MSI/MCI es la siguiente fase (W5) — W4 solo cubre compras de contado con la tarjeta.
+### MSI/MCI (W5)
+
+`POST /credit-cards/{id}/installment-plans` registra la compra financiada completa (monto original + interés, si es MCI) como una única `CREDIT_CARD_PURCHASE` — el saldo de la tarjeta ya refleja el total adeudado desde el día 1 — y el backend decide `MSI` vs `MCI` según la tasa de interés (`0` = MSI), así que el formulario es uno solo con un campo de tasa opcional, sin selector de tipo. Cada plan se muestra en un acordeón (`InstallmentPlansSection`, reutilizado desde `CreditCardDetailPage`) con su resumen (cuota mensual, saldo financiado, próxima cuota, fecha de fin) y el calendario completo de cuotas.
+
+"Marcar como pagada" en una cuota es **solo contable** — no mueve dinero entre cuentas (el dinero real ya salió, o sale, cuando pagas la tarjeta con "Pagar tarjeta"; esto solo lleva el registro de qué cuotas ya cubriste). El texto de ayuda del botón lo aclara explícitamente para no confundirlo con un pago real.
 
 ## Repositorios relacionados
 
