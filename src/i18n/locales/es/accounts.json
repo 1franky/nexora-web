@@ -1,0 +1,36 @@
+{
+  "title": "Cuentas",
+  "newAccount": "Nueva cuenta",
+  "empty": "Todavía no tienes cuentas. Crea la primera para empezar a registrar tus movimientos.",
+  "loadError": "No se pudieron cargar tus cuentas.",
+  "types": {
+    "DEBIT": "Débito",
+    "SAVINGS": "Ahorro",
+    "CREDIT_CARD": "Tarjeta de crédito",
+    "AFORE": "AFORE",
+    "PPR": "PPR"
+  },
+  "archived": "Archivada",
+  "includedIn": {
+    "availableBalance": "Disponible",
+    "netWorth": "Patrimonio"
+  },
+  "dialog": {
+    "title": "Nueva cuenta",
+    "name": "Nombre",
+    "type": "Tipo",
+    "currency": "Moneda",
+    "currencyHint": "Código ISO 4217 de 3 letras, ej. MXN",
+    "currencyInvalid": "Usa un código de 3 letras mayúsculas (ej. MXN).",
+    "openingBalance": "Saldo inicial",
+    "includeInAvailableBalance": "Incluir en disponible",
+    "includeInNetWorth": "Incluir en patrimonio",
+    "create": "Crear cuenta"
+  },
+  "detail": {
+    "balance": "Saldo",
+    "newTransaction": "Nuevo movimiento",
+    "backToList": "Volver a cuentas",
+    "notFound": "No se encontró la cuenta."
+  }
+}

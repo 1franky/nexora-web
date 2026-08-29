@@ -44,3 +44,23 @@ export function formatDateShort(isoDate: string): string {
   const [year, month, day] = isoDate.split('-').map(Number)
   return dateFormatter.format(new Date(year, month - 1, day)).replace('.', '')
 }
+
+const currencyFormattersByCode = new Map<string, Intl.NumberFormat>()
+
+/**
+ * A diferencia de formatCurrency (fijo a MXN: el dashboard siempre agrega en
+ * la moneda base), esto respeta la moneda propia de cada cuenta/movimiento
+ * — necesario en cuanto hay más de una cuenta y no todas son MXN.
+ */
+export function formatCurrencyIn(value: number, currencyCode: string): string {
+  let formatter = currencyFormattersByCode.get(currencyCode)
+  if (!formatter) {
+    try {
+      formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: currencyCode })
+    } catch {
+      formatter = undefined
+    }
+    if (formatter) currencyFormattersByCode.set(currencyCode, formatter)
+  }
+  return formatter ? formatter.format(value) : `${value.toFixed(2)} ${currencyCode}`
+}

@@ -4,6 +4,8 @@ import AppLayout from '../layout/AppLayout'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 import DashboardPage from '../pages/DashboardPage'
+import AccountsPage from '../pages/AccountsPage'
+import TransactionsPage from '../pages/TransactionsPage'
 import ComingSoonPage from '../pages/ComingSoonPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
@@ -17,8 +19,8 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           { path: '/', element: <DashboardPage /> },
-          { path: '/accounts', element: <ComingSoonPage title="Cuentas" /> },
-          { path: '/transactions', element: <ComingSoonPage title="Movimientos" /> },
+          { path: '/accounts', element: <AccountsPage /> },
+          { path: '/transactions', element: <TransactionsPage /> },
           { path: '/credit-cards', element: <ComingSoonPage title="Tarjetas" /> },
           { path: '/categories', element: <ComingSoonPage title="Categorías" /> },
           { path: '/notifications', element: <ComingSoonPage title="Notificaciones" /> },

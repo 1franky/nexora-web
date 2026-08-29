@@ -1,0 +1,48 @@
+{
+  "heading": "Movimientos",
+  "newTransaction": "Nuevo movimiento",
+  "accountSelectorLabel": "Cuenta",
+  "empty": "Todavía no hay movimientos en esta cuenta.",
+  "loadError": "No se pudieron cargar los movimientos.",
+  "needsAccount": "Necesitas una cuenta antes de registrar movimientos.",
+  "createAccountLink": "Crear una cuenta",
+  "types": {
+    "INCOME": "Ingreso",
+    "EXPENSE": "Gasto",
+    "TRANSFER": "Transferencia",
+    "CREDIT_CARD_PURCHASE": "Compra con tarjeta",
+    "CREDIT_CARD_PAYMENT": "Pago de tarjeta",
+    "REFUND": "Reembolso",
+    "ADJUSTMENT": "Ajuste"
+  },
+  "columns": {
+    "date": "Fecha",
+    "type": "Tipo",
+    "category": "Categoría",
+    "description": "Descripción",
+    "relatedAccount": "Cuenta relacionada",
+    "amount": "Monto"
+  },
+  "noCategory": "Sin categoría",
+  "dialog": {
+    "title": "Nuevo movimiento",
+    "kindIncome": "Ingreso",
+    "kindExpense": "Gasto",
+    "kindTransfer": "Transferencia",
+    "amount": "Monto",
+    "date": "Fecha",
+    "category": "Categoría",
+    "noCategoryOption": "Sin categoría",
+    "newCategoryOption": "+ Nueva categoría…",
+    "toAccount": "Cuenta destino",
+    "description": "Descripción",
+    "reference": "Referencia (opcional)",
+    "submit": "Guardar",
+    "noOtherAccounts": "Necesitas otra cuenta activa para transferir."
+  },
+  "newCategoryDialog": {
+    "title": "Nueva categoría",
+    "name": "Nombre",
+    "create": "Crear"
+  }
+}
