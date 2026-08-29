@@ -8,14 +8,12 @@ import ListItemText from '@mui/material/ListItemText'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
-import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
 import CheckIcon from '@mui/icons-material/Check'
 import { useThemeMode, type ThemeMode } from '../theme/ThemeModeContext'
 
 const OPTIONS: { value: ThemeMode; icon: React.ReactNode }[] = [
   { value: 'light', icon: <LightModeIcon fontSize="small" /> },
   { value: 'dark', icon: <DarkModeIcon fontSize="small" /> },
-  { value: 'system', icon: <SettingsBrightnessIcon fontSize="small" /> },
 ]
 
 export default function ThemeModeMenu() {
@@ -32,7 +30,7 @@ export default function ThemeModeMenu() {
 
   return (
     <>
-      <IconButton color="inherit" onClick={handleOpen} aria-label={t('theme.system')}>
+      <IconButton color="inherit" onClick={handleOpen} aria-label={t('theme.menuLabel')}>
         <Brightness4Icon />
       </IconButton>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>

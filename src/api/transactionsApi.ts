@@ -60,8 +60,9 @@ export interface TransferResult {
   incoming: Transaction
 }
 
-export async function listTransactions(accountId: string): Promise<Transaction[]> {
-  const { data } = await apiClient.get<Transaction[]>('/transactions', { params: { accountId } })
+/** Sin accountId, trae los movimientos de todas las cuentas del usuario juntos. */
+export async function listTransactions(accountId?: string): Promise<Transaction[]> {
+  const { data } = await apiClient.get<Transaction[]>('/transactions', { params: accountId ? { accountId } : undefined })
   return data
 }
 

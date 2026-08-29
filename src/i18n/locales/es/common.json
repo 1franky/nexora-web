@@ -16,7 +16,7 @@
   "theme": {
     "light": "Claro",
     "dark": "Oscuro",
-    "system": "Sistema"
+    "menuLabel": "Tema"
   },
   "actions": {
     "save": "Guardar",

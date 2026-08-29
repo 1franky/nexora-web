@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import { useAuth } from '../auth/AuthContext'
 import { useThemeMode, type ThemeMode } from '../theme/ThemeModeContext'
 
-const THEME_OPTIONS: ThemeMode[] = ['light', 'dark', 'system']
+const THEME_OPTIONS: ThemeMode[] = ['light', 'dark']
 
 export default function SettingsPage() {
   const { t } = useTranslation('settings')

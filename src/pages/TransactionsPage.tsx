@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link as RouterLink, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
@@ -38,30 +38,21 @@ export default function TransactionsPage() {
   })
   const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: listCategories })
 
+  // "" = todas las cuentas (default); si la URL trae un accountId que ya no existe, se ignora.
   const accountIdFromUrl = searchParams.get('accountId')
-  const accountId = accountIdFromUrl && accounts?.some((a) => a.id === accountIdFromUrl) ? accountIdFromUrl : accounts?.[0]?.id
-
-  // Si la URL no trae una cuenta válida, fija la primera en cuanto carguen las cuentas.
-  useEffect(() => {
-    if (accounts && accounts.length > 0 && accountId && accountIdFromUrl !== accountId) {
-      setSearchParams({ accountId }, { replace: true })
-    }
-  }, [accounts, accountId, accountIdFromUrl, setSearchParams])
-
+  const accountId = accountIdFromUrl && accounts?.some((a) => a.id === accountIdFromUrl) ? accountIdFromUrl : ''
   const selectedAccount = accounts?.find((a) => a.id === accountId)
 
   const { data: transactions, isLoading: transactionsLoading, isError: transactionsError } = useQuery({
-    queryKey: ['transactions', accountId],
-    queryFn: () => listTransactions(accountId!),
-    enabled: Boolean(accountId),
+    queryKey: ['transactions', accountId || undefined],
+    queryFn: () => listTransactions(accountId || undefined),
+    enabled: Boolean(accounts),
   })
 
   const categoryNameById = useMemo(() => new Map((categories ?? []).map((c) => [c.id, c.name])), [categories])
   const accountNameById = useMemo(() => new Map((accounts ?? []).map((a) => [a.id, a.name])), [accounts])
-  const otherActiveAccounts = useMemo(
-    () => (accounts ?? []).filter((a) => a.id !== accountId && a.status === 'ACTIVE'),
-    [accounts, accountId],
-  )
+  const accountCurrencyById = useMemo(() => new Map((accounts ?? []).map((a) => [a.id, a.currency])), [accounts])
+  const activeAccounts = useMemo(() => (accounts ?? []).filter((a) => a.status === 'ACTIVE'), [accounts])
 
   if (accountsLoading) {
     return (
@@ -99,7 +90,7 @@ export default function TransactionsPage() {
         <Typography variant="h4" component="h1">
           {t('heading')}
         </Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)} disabled={!accountId}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)} disabled={activeAccounts.length === 0}>
           {t('newTransaction')}
         </Button>
       </Stack>
@@ -109,10 +100,11 @@ export default function TransactionsPage() {
           select
           size="small"
           label={t('accountSelectorLabel')}
-          value={accountId ?? ''}
-          onChange={(event) => setSearchParams({ accountId: event.target.value })}
+          value={accountId}
+          onChange={(event) => setSearchParams(event.target.value ? { accountId: event.target.value } : {})}
           sx={{ minWidth: 260 }}
         >
+          <MenuItem value="">{t('allAccounts')}</MenuItem>
           {accounts.map((account) => (
             <MenuItem key={account.id} value={account.id}>
               {account.name} ({account.currency})
@@ -143,6 +135,7 @@ export default function TransactionsPage() {
               <TableHead>
                 <TableRow>
                   <TableCell>{t('columns.date')}</TableCell>
+                  {!accountId && <TableCell>{t('columns.account')}</TableCell>}
                   <TableCell>{t('columns.type')}</TableCell>
                   <TableCell>{t('columns.category')}</TableCell>
                   <TableCell>{t('columns.description')}</TableCell>
@@ -153,6 +146,7 @@ export default function TransactionsPage() {
                 {transactions.map((transaction: Transaction) => (
                   <TableRow key={transaction.id}>
                     <TableCell>{formatDateShort(transaction.date)}</TableCell>
+                    {!accountId && <TableCell>{accountNameById.get(transaction.accountId) ?? '—'}</TableCell>}
                     <TableCell>
                       <Chip size="small" variant="outlined" label={t(`types.${transaction.type}`)} />
                     </TableCell>
@@ -173,7 +167,7 @@ export default function TransactionsPage() {
                       }}
                     >
                       {transaction.balanceEffect >= 0 ? '+' : ''}
-                      {formatCurrencyIn(transaction.balanceEffect, selectedAccount?.currency ?? 'MXN')}
+                      {formatCurrencyIn(transaction.balanceEffect, accountCurrencyById.get(transaction.accountId) ?? 'MXN')}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -183,14 +177,12 @@ export default function TransactionsPage() {
         </Paper>
       )}
 
-      {accountId && (
-        <TransactionFormDialog
-          open={dialogOpen}
-          accountId={accountId}
-          otherActiveAccounts={otherActiveAccounts}
-          onClose={() => setDialogOpen(false)}
-        />
-      )}
+      <TransactionFormDialog
+        open={dialogOpen}
+        accounts={activeAccounts}
+        defaultAccountId={accountId || undefined}
+        onClose={() => setDialogOpen(false)}
+      />
     </Box>
   )
 }

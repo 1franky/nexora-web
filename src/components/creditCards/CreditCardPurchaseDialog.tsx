@@ -44,7 +44,8 @@ export default function CreditCardPurchaseDialog({ open, cardId, cardAccountId, 
   const [quickCreateOpen, setQuickCreateOpen] = useState(false)
 
   const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: listCategories, enabled: open })
-  const expenseCategories = (categories ?? []).filter((category) => category.type === 'EXPENSE')
+  // Una categoría archivada sigue existiendo (para lo ya categorizado) pero nexora-api rechaza usarla en un movimiento nuevo.
+  const expenseCategories = (categories ?? []).filter((category) => category.type === 'EXPENSE' && category.status === 'ACTIVE')
 
   const resetForm = () => {
     setAmount('')

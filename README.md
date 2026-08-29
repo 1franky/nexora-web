@@ -32,7 +32,7 @@ Disponible inicialmente en **español**, con internacionalización (i18n) desde 
 
 ## Tema visual
 
-Modo claro, oscuro y según sistema, con la preferencia persistida entre sesiones.
+Modo claro u oscuro, con la preferencia persistida entre sesiones. La primera vez (nada guardado todavía) se resuelve una sola vez según la preferencia del sistema operativo en ese momento — no se vuelve a "seguir" cambios futuros del SO.
 
 ## Módulos
 
@@ -85,7 +85,7 @@ src/
 ├── auth/         AuthContext, tokenStore (localStorage), RequireAuth (guard de rutas)
 ├── app/          App, router, QueryClient
 ├── layout/       AppLayout (barra + navegación), AuthLayout
-├── theme/        claro/oscuro/sistema (persistido), tema de Material UI
+├── theme/        claro/oscuro (persistido), tema de Material UI
 ├── i18n/         español, por namespace/módulo (common, auth, dashboard, accounts, transactions, ...)
 └── pages/        LoginPage, RegisterPage, DashboardPage, AccountsPage, TransactionsPage, CreditCardsPage, CreditCardDetailPage (incluye MSI/MCI)
 ```
@@ -94,7 +94,7 @@ Login con JWT real contra `nexora-api` (B7): access token corto + refresh token 
 
 ## Estado del proyecto
 
-**W1 a W8 completos** — el roadmap original de `nexora-web` (`plan.md`, sección 9) está cerrado: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas), reportes por rango de fechas, notificaciones (pagos y cuotas por vencer) y una página de configuración (cuenta, apariencia, idioma). Solo la gestión completa de **Categorías** (editar, archivar) queda como pantalla "próximamente" — el resto de los módulos del plan ya tienen una implementación real. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 a W8 completos** — el roadmap original de `nexora-web` (`plan.md`, sección 9) está cerrado, y ya no queda ningún módulo "próximamente": login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias, de todas las cuentas juntas o filtrados a una), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas), reportes por rango de fechas, notificaciones (pagos y cuotas por vencer), configuración (cuenta, apariencia, idioma) y gestión completa de categorías (crear, renombrar, archivar). Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
@@ -106,7 +106,7 @@ El dashboard sigue la skill `dataviz`: cada gráfica compara **magnitud**, no id
 
 Una transferencia crea dos filas (`outgoing`/`incoming`) que comparten el mismo `type` (`TRANSFER`) — lo único que distingue cuál entra y cuál sale es `balanceEffect` (con signo), que `nexora-api` calculaba desde B2 pero no exponía en el DTO hasta un fix dedicado motivado por esta misma fase. Sin ese campo no había forma de pintar el monto en rojo/verde ni de resolver el nombre de la "cuenta relacionada" en la tabla.
 
-La categorización es mínima a propósito: la gestión completa de categorías (editar, archivar) sigue siendo su propio módulo, todavía "próximamente" — lo que hay aquí es solo lo necesario para no quedar bloqueado al categorizar un movimiento (elegir una existente o crear una nueva con nombre + tipo implícito, sin salir del formulario).
+La categorización desde este formulario sigue siendo mínima a propósito (elegir una categoría existente o crear una nueva con nombre + tipo implícito, sin salir del formulario) — la gestión completa (renombrar, archivar) vive en su propio módulo, ver "Categorías" más abajo.
 
 ### Tarjetas (W4)
 
@@ -129,6 +129,14 @@ Puramente frontend: `nexora-api` ya expone todas las métricas en una sola respu
 ### Notificaciones y Configuración (W8)
 
 Ambas consumen lo que `nexora-api` ya tenía construido desde B6, sin cambios de backend. "Notificaciones" llama a `GET /notifications` (regenera al vuelo lo que falte — pagos y cuotas por vencer — antes de responder, así que nunca hay que "refrescar" para ver algo al día), con marcar-como-leída individual y masivo; el contador de no leídas en el ícono de nav (`AppLayout`) comparte la misma `queryKey` que la página, así que entrar a "Notificaciones" no dispara una segunda consulta, solo reusa/invalida ese mismo caché. "Configuración" agrupa cuenta (solo lectura: nombre y email de `/users/me`, ya en `AuthContext`), apariencia (el mismo control de tema de `ThemeModeContext` que ya vive en la barra superior, ahora también aquí) e idioma (el selector muestra "Español" fijo — no hay nada más que ofrecer todavía, pero i18n ya está organizado por namespace desde W1 para agregar otro sin reestructurar).
+
+### Categorías, tema y Movimientos multi-cuenta
+
+Tres cambios independientes en la misma pasada, motivados por pruebas reales y un issue de seguimiento ([#6](https://github.com/1franky/nexora-web/issues/6)):
+
+- **Categorías** (`/categories`, gestión completa): crear, renombrar y archivar/reactivar, agrupadas en "Gastos" e "Ingresos". Archivar no borra la categoría — sigue existiendo para lo ya categorizado y sigue en el listado — pero `nexora-api` la rechaza si se intenta usar en un movimiento nuevo; los selectores de categoría (Movimientos, Compra con tarjeta) filtran las archivadas para no ofrecerlas ahí.
+- **Tema visual**: se quitó la opción "Sistema" (antes tercera opción junto a Claro/Oscuro). Un valor ya guardado se respeta tal cual; el valor legado `"system"` (o no encontrar nada guardado) se resuelve una sola vez a la preferencia del sistema operativo en ese momento y se persiste — sin quedar "siguiendo" cambios futuros del SO como antes (con un listener en vivo sobre `prefers-color-scheme`).
+- **Movimientos**: la cuenta pasó de ser un requisito para poder listar a un filtro opcional — por defecto se ven los movimientos de todas las cuentas juntos (con columna de cuenta), y el selector acota igual que antes. `accountId` en `GET /transactions` de `nexora-api` pasó de obligatorio a opcional para esto. El diálogo "Nuevo movimiento" ahora elige la cuenta como parte del formulario (antes era un prop fijo, forzada por el contexto de la página) — se precarga con el filtro activo si había uno.
 
 ## Repositorios relacionados
 
