@@ -1,0 +1,54 @@
+{
+  "title": "Reportes",
+  "filters": {
+    "from": "Desde",
+    "to": "Hasta",
+    "account": "Cuenta",
+    "allAccounts": "Todas las cuentas",
+    "type": "Tipo de movimiento",
+    "allTypes": "Todos"
+  },
+  "invalidRange": "La fecha inicial no puede ser posterior a la fecha final.",
+  "summary": {
+    "totalIncome": "Ingresos totales",
+    "totalExpense": "Gastos totales",
+    "balance": "Balance"
+  },
+  "categories": {
+    "expensesByCategory": "Gastos por categoría",
+    "incomeByCategory": "Ingresos por categoría",
+    "noExpenses": "No hay gastos con categoría en este rango.",
+    "noIncome": "No hay ingresos con categoría en este rango."
+  },
+  "trends": {
+    "monthlyIncome": "Ingresos por mes",
+    "monthlyExpense": "Gastos por mes"
+  },
+  "transactions": {
+    "heading": "Movimientos del rango",
+    "empty": "No hay movimientos en este rango.",
+    "columns": {
+      "date": "Fecha",
+      "account": "Cuenta",
+      "type": "Tipo",
+      "category": "Categoría",
+      "description": "Descripción",
+      "amount": "Monto"
+    },
+    "noCategory": "Sin categoría"
+  },
+  "types": {
+    "INCOME": "Ingreso",
+    "EXPENSE": "Gasto",
+    "TRANSFER": "Transferencia",
+    "CREDIT_CARD_PURCHASE": "Compra con tarjeta",
+    "CREDIT_CARD_PAYMENT": "Pago de tarjeta",
+    "REFUND": "Reembolso",
+    "ADJUSTMENT": "Ajuste"
+  },
+  "table": {
+    "category": "Categoría",
+    "amount": "Monto",
+    "month": "Mes"
+  }
+}

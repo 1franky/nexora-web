@@ -7,6 +7,7 @@ import dashboard from './locales/es/dashboard.json'
 import accounts from './locales/es/accounts.json'
 import transactions from './locales/es/transactions.json'
 import creditCards from './locales/es/creditCards.json'
+import reports from './locales/es/reports.json'
 
 /**
  * Solo español por ahora (plan.md, sección 17.3), con namespaces por
@@ -18,11 +19,11 @@ void i18next
   .use(initReactI18next)
   .init({
     resources: {
-      es: { common, auth, dashboard, accounts, transactions, creditCards },
+      es: { common, auth, dashboard, accounts, transactions, creditCards, reports },
     },
     lng: 'es',
     fallbackLng: 'es',
-    ns: ['common', 'auth', 'dashboard', 'accounts', 'transactions', 'creditCards'],
+    ns: ['common', 'auth', 'dashboard', 'accounts', 'transactions', 'creditCards', 'reports'],
     defaultNS: 'common',
     interpolation: { escapeValue: false },
   })
