@@ -9,6 +9,8 @@ import TransactionsPage from '../pages/TransactionsPage'
 import CreditCardsPage from '../pages/CreditCardsPage'
 import CreditCardDetailPage from '../pages/CreditCardDetailPage'
 import ReportsPage from '../pages/ReportsPage'
+import NotificationsPage from '../pages/NotificationsPage'
+import SettingsPage from '../pages/SettingsPage'
 import ComingSoonPage from '../pages/ComingSoonPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
@@ -28,8 +30,8 @@ export const router = createBrowserRouter([
           { path: '/credit-cards/:id', element: <CreditCardDetailPage /> },
           { path: '/reports', element: <ReportsPage /> },
           { path: '/categories', element: <ComingSoonPage title="Categorías" /> },
-          { path: '/notifications', element: <ComingSoonPage title="Notificaciones" /> },
-          { path: '/settings', element: <ComingSoonPage title="Configuración" /> },
+          { path: '/notifications', element: <NotificationsPage /> },
+          { path: '/settings', element: <SettingsPage /> },
         ],
       },
     ],

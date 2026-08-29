@@ -8,6 +8,8 @@ import accounts from './locales/es/accounts.json'
 import transactions from './locales/es/transactions.json'
 import creditCards from './locales/es/creditCards.json'
 import reports from './locales/es/reports.json'
+import notifications from './locales/es/notifications.json'
+import settings from './locales/es/settings.json'
 
 /**
  * Solo español por ahora (plan.md, sección 17.3), con namespaces por
@@ -19,11 +21,11 @@ void i18next
   .use(initReactI18next)
   .init({
     resources: {
-      es: { common, auth, dashboard, accounts, transactions, creditCards, reports },
+      es: { common, auth, dashboard, accounts, transactions, creditCards, reports, notifications, settings },
     },
     lng: 'es',
     fallbackLng: 'es',
-    ns: ['common', 'auth', 'dashboard', 'accounts', 'transactions', 'creditCards', 'reports'],
+    ns: ['common', 'auth', 'dashboard', 'accounts', 'transactions', 'creditCards', 'reports', 'notifications', 'settings'],
     defaultNS: 'common',
     interpolation: { escapeValue: false },
   })

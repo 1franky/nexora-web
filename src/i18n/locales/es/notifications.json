@@ -1,0 +1,8 @@
+{
+  "title": "Notificaciones",
+  "markAllRead": "Marcar todas como leídas",
+  "markRead": "Marcar como leída",
+  "unread": "Nueva",
+  "empty": "No tienes notificaciones.",
+  "loadError": "No se pudieron cargar las notificaciones."
+}

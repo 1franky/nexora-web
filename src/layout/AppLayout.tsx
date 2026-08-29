@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
 import AppBar from '@mui/material/AppBar'
+import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
@@ -27,6 +29,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications'
 import SettingsIcon from '@mui/icons-material/Settings'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useAuth } from '../auth/AuthContext'
+import { listNotifications } from '../api/notificationsApi'
 import ThemeModeMenu from './ThemeModeMenu'
 
 const DRAWER_WIDTH = 260
@@ -47,6 +50,11 @@ export default function AppLayout() {
   const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  // Compartida con NotificationsPage (misma queryKey): entrar a esa página
+  // no dispara una segunda consulta, solo reusa/actualiza este mismo caché.
+  const { data: notifications } = useQuery({ queryKey: ['notifications'], queryFn: () => listNotifications() })
+  const unreadCount = notifications?.filter((n) => n.status === 'UNREAD').length ?? 0
 
   const navContent = (
     <>
@@ -72,7 +80,15 @@ export default function AppLayout() {
                 },
               }}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemIcon>
+                {item.to === '/notifications' && unreadCount > 0 ? (
+                  <Badge badgeContent={unreadCount} color="error">
+                    {item.icon}
+                  </Badge>
+                ) : (
+                  item.icon
+                )}
+              </ListItemIcon>
               <ListItemText primary={t(item.labelKey)} />
             </ListItemButton>
           </ListItem>

@@ -94,7 +94,7 @@ Login con JWT real contra `nexora-api` (B7): access token corto + refresh token 
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)**, **W4 (tarjetas)**, **W5 (MSI/MCI)**, **W6 (reportes)** y **W7 (dashboard personalizable)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas) y reportes por rango de fechas. Queda **W8 (configuración)**; el resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 a W8 completos** — el roadmap original de `nexora-web` (`plan.md`, sección 9) está cerrado: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas), reportes por rango de fechas, notificaciones (pagos y cuotas por vencer) y una página de configuración (cuenta, apariencia, idioma). Solo la gestión completa de **Categorías** (editar, archivar) queda como pantalla "próximamente" — el resto de los módulos del plan ya tienen una implementación real. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
@@ -125,6 +125,10 @@ A diferencia del dashboard (siempre mes calendario o una ventana fija de 6 meses
 ### Dashboard personalizable (W7)
 
 Puramente frontend: `nexora-api` ya expone todas las métricas en una sola respuesta (`GET /dashboard`), así que "agregar, eliminar y reordenar widgets" (`plan.md`, sección 10) es solo cuestión de qué se renderiza y en qué orden, no de qué se pide al backend. Cada sección del dashboard (`src/components/dashboard/widgetDefinitions.ts`) es un widget independiente con un `id` y un tamaño (`quarter`/`half`); `useDashboardLayout` guarda el orden y la visibilidad en `localStorage` (mismo patrón que la preferencia de tema), y el diálogo "Personalizar" los administra con checkboxes y flechas subir/bajar — sin drag-and-drop, para no sumar una dependencia nueva solo por esto. El selector de mes queda fuera del sistema de widgets a propósito: no es contenido que se pueda ocultar, es el control que decide qué dato ven los widgets que dependen del periodo.
+
+### Notificaciones y Configuración (W8)
+
+Ambas consumen lo que `nexora-api` ya tenía construido desde B6, sin cambios de backend. "Notificaciones" llama a `GET /notifications` (regenera al vuelo lo que falte — pagos y cuotas por vencer — antes de responder, así que nunca hay que "refrescar" para ver algo al día), con marcar-como-leída individual y masivo; el contador de no leídas en el ícono de nav (`AppLayout`) comparte la misma `queryKey` que la página, así que entrar a "Notificaciones" no dispara una segunda consulta, solo reusa/invalida ese mismo caché. "Configuración" agrupa cuenta (solo lectura: nombre y email de `/users/me`, ya en `AuthContext`), apariencia (el mismo control de tema de `ThemeModeContext` que ya vive en la barra superior, ahora también aquí) e idioma (el selector muestra "Español" fijo — no hay nada más que ofrecer todavía, pero i18n ya está organizado por namespace desde W1 para agregar otro sin reestructurar).
 
 ## Repositorios relacionados
 

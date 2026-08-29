@@ -1,0 +1,16 @@
+{
+  "title": "Configuración",
+  "account": {
+    "heading": "Cuenta",
+    "name": "Nombre",
+    "email": "Email"
+  },
+  "appearance": {
+    "heading": "Apariencia",
+    "subtitle": "Elige cómo se ve la aplicación. La preferencia se guarda en este navegador."
+  },
+  "language": {
+    "heading": "Idioma",
+    "subtitle": "Por ahora la app solo está disponible en español; la arquitectura ya está preparada para agregar más idiomas más adelante."
+  }
+}
