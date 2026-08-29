@@ -1,10 +1,58 @@
 {
   "title": "Dashboard",
+  "greeting": "¡Hola, {{name}}!",
   "availableBalance": "Dinero disponible",
   "netWorth": "Patrimonio neto",
-  "incomeThisMonth": "Ingresos del mes",
-  "expenseThisMonth": "Gastos del mes",
   "creditCardDebt": "Deuda de tarjetas",
   "availableCredit": "Crédito disponible",
-  "comingSoon": "El resto del dashboard llega en la siguiente fase (W2)."
+  "monthSummary": {
+    "heading": "Resumen del mes",
+    "monthLabel": "Mes",
+    "incomeThisMonth": "Ingresos del mes",
+    "expenseThisMonth": "Gastos del mes",
+    "monthlyBalance": "Balance mensual",
+    "expensesByCategory": "Gastos por categoría",
+    "incomeByCategory": "Ingresos por categoría",
+    "noExpenses": "No hay gastos con categoría este mes.",
+    "noIncome": "No hay ingresos con categoría este mes."
+  },
+  "trends": {
+    "netWorthEvolution": "Evolución del patrimonio",
+    "netWorthEvolutionSubtitle": "Últimos 6 meses",
+    "expenseEvolution": "Evolución de gastos",
+    "expenseEvolutionSubtitle": "Últimos 6 meses"
+  },
+  "creditCards": {
+    "upcomingPayments": "Próximos pagos",
+    "noUpcomingPayments": "No tienes pagos de tarjeta próximos.",
+    "activeMsiPlans": "Planes MSI activos",
+    "monthlyInstallmentCommitment": "Compromiso mensual MSI/MCI"
+  },
+  "recentTransactions": {
+    "heading": "Últimos movimientos",
+    "empty": "Todavía no hay movimientos.",
+    "columns": {
+      "date": "Fecha",
+      "description": "Descripción",
+      "type": "Tipo",
+      "amount": "Monto"
+    }
+  },
+  "transactionTypes": {
+    "INCOME": "Ingreso",
+    "EXPENSE": "Gasto",
+    "TRANSFER": "Transferencia",
+    "CREDIT_CARD_PURCHASE": "Compra con tarjeta",
+    "CREDIT_CARD_PAYMENT": "Pago de tarjeta",
+    "REFUND": "Reembolso",
+    "ADJUSTMENT": "Ajuste"
+  },
+  "table": {
+    "category": "Categoría",
+    "amount": "Monto",
+    "card": "Tarjeta",
+    "dueDate": "Vence",
+    "expectedPayment": "Pago estimado",
+    "month": "Mes"
+  }
 }

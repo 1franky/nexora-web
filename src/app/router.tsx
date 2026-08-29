@@ -3,7 +3,7 @@ import RequireAuth from '../auth/RequireAuth'
 import AppLayout from '../layout/AppLayout'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
-import HomePage from '../pages/HomePage'
+import DashboardPage from '../pages/DashboardPage'
 import ComingSoonPage from '../pages/ComingSoonPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
-          { path: '/', element: <HomePage /> },
+          { path: '/', element: <DashboardPage /> },
           { path: '/accounts', element: <ComingSoonPage title="Cuentas" /> },
           { path: '/transactions', element: <ComingSoonPage title="Movimientos" /> },
           { path: '/credit-cards', element: <ComingSoonPage title="Tarjetas" /> },

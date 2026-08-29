@@ -94,7 +94,11 @@ Login con JWT real contra `nexora-api` (B7): access token corto + refresh token 
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)** completo: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español. El resto de los módulos (Cuentas, Movimientos, Tarjetas, Categorías, Notificaciones, y el dashboard completo de W2) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 (arquitectura base)** y **W2 (dashboard)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, y el dashboard completo (patrimonio neto, disponible, deuda/crédito de tarjetas, resumen del mes con selector de periodo, gastos/ingresos por categoría, evolución de patrimonio y de gastos a 6 meses, próximos pagos, MSI activos y últimos movimientos — cada gráfica con su vista de tabla equivalente). El resto de los módulos (Cuentas, Movimientos, Tarjetas, Categorías, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+
+### Gráficas (dashboard)
+
+El dashboard sigue la skill `dataviz`: cada gráfica compara **magnitud**, no identidad — un solo color (azul) en todas, nunca una paleta categórica por categoría (eso gastaría el canal de identidad en algo que el largo de la barra ya muestra). Etiquetas directas siempre visibles donde hay espacio, crosshair + tooltip en la línea, tooltip por barra en las de barras, y **toggle de vista de tabla** en cada tarjeta (ningún valor depende solo de hover o de color para poder leerse). Paleta y specs en `src/components/dataviz/`.
 
 ## Repositorios relacionados
 
