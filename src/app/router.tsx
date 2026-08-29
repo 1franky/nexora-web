@@ -8,6 +8,7 @@ import AccountsPage from '../pages/AccountsPage'
 import TransactionsPage from '../pages/TransactionsPage'
 import CreditCardsPage from '../pages/CreditCardsPage'
 import CreditCardDetailPage from '../pages/CreditCardDetailPage'
+import ReportsPage from '../pages/ReportsPage'
 import ComingSoonPage from '../pages/ComingSoonPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
           { path: '/transactions', element: <TransactionsPage /> },
           { path: '/credit-cards', element: <CreditCardsPage /> },
           { path: '/credit-cards/:id', element: <CreditCardDetailPage /> },
+          { path: '/reports', element: <ReportsPage /> },
           { path: '/categories', element: <ComingSoonPage title="Categorías" /> },
           { path: '/notifications', element: <ComingSoonPage title="Notificaciones" /> },
           { path: '/settings', element: <ComingSoonPage title="Configuración" /> },

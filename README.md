@@ -94,7 +94,7 @@ Login con JWT real contra `nexora-api` (B7): access token corto + refresh token 
 
 ## Estado del proyecto
 
-**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)**, **W4 (tarjetas)** y **W5 (MSI/MCI)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos) y compras a meses (MSI/MCI, con calendario de cuotas). El resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 (arquitectura base)**, **W2 (dashboard)**, **W3 (cuentas y movimientos)**, **W4 (tarjetas)**, **W5 (MSI/MCI)** y **W6 (reportes)** completos: login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro/sistema persistido, i18n en español, el dashboard completo, gestión de cuentas, movimientos (ingresos, gastos y transferencias), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas) y reportes por rango de fechas. Quedan **W7 (dashboard personalizable)** y **W8 (configuración)**; el resto de los módulos (Categorías como gestión completa, Notificaciones) son pantallas "próximamente" por ahora. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
@@ -117,6 +117,10 @@ A diferencia de Cuentas/Movimientos, aquí sí hay una página de detalle por ta
 `POST /credit-cards/{id}/installment-plans` registra la compra financiada completa (monto original + interés, si es MCI) como una única `CREDIT_CARD_PURCHASE` — el saldo de la tarjeta ya refleja el total adeudado desde el día 1 — y el backend decide `MSI` vs `MCI` según la tasa de interés (`0` = MSI), así que el formulario es uno solo con un campo de tasa opcional, sin selector de tipo. Cada plan se muestra en un acordeón (`InstallmentPlansSection`, reutilizado desde `CreditCardDetailPage`) con su resumen (cuota mensual, saldo financiado, próxima cuota, fecha de fin) y el calendario completo de cuotas.
 
 "Marcar como pagada" en una cuota es **solo contable** — no mueve dinero entre cuentas (el dinero real ya salió, o sale, cuando pagas la tarjeta con "Pagar tarjeta"; esto solo lleva el registro de qué cuotas ya cubriste). El texto de ayuda del botón lo aclara explícitamente para no confundirlo con un pago real.
+
+### Reportes (W6)
+
+A diferencia del dashboard (siempre mes calendario o una ventana fija de 6 meses), "Reportes" agrega el mismo ledger de `Transaction` por un **rango de fechas libre** (`GET /api/v1/reports?from=&to=`), acotable a una cuenta o a un tipo de movimiento — filtros que también agregado en `nexora-api` en este mismo cambio, motivado por esta página. Reutiliza los mismos componentes de `dataviz` que el dashboard (gráficas de categoría y evolución mensual con su vista de tabla), y una tabla de movimientos igual a la de Movimientos pero cruzando todas las cuentas del usuario a la vez (con columna de cuenta, y cada monto en su propia moneda).
 
 ## Repositorios relacionados
 
