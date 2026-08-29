@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "Nexora"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "accounts": "Cuentas",
+    "transactions": "Movimientos",
+    "creditCards": "Tarjetas",
+    "categories": "Categorías",
+    "notifications": "Notificaciones",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "retry": "Reintentar"
+  },
+  "errors": {
+    "generic": "Ocurrió un error. Intenta de nuevo."
+  }
+}

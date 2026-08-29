@@ -1,0 +1,10 @@
+{
+  "title": "Dashboard",
+  "availableBalance": "Dinero disponible",
+  "netWorth": "Patrimonio neto",
+  "incomeThisMonth": "Ingresos del mes",
+  "expenseThisMonth": "Gastos del mes",
+  "creditCardDebt": "Deuda de tarjetas",
+  "availableCredit": "Crédito disponible",
+  "comingSoon": "El resto del dashboard llega en la siguiente fase (W2)."
+}

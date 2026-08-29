@@ -1,0 +1,15 @@
+# Stack de nexora-web. Es una SPA: las peticiones a nexora-api salen del
+# navegador del usuario, no de este contenedor — por eso no comparte red
+# Docker con el compose de nexora-api (no hace falta, no se llaman entre
+# contenedores). Mismo compose en desarrollo local y en el VPS; lo que
+# cambia es el .env (ver .env.example).
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3005/api/v1}
+    container_name: nexora-web
+    ports:
+      - '3006:3006'
