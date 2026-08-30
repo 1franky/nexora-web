@@ -70,6 +70,8 @@ npm run lint            # oxlint
 
 Mismo `compose.yaml` en desarrollo y en el VPS; lo que cambia es el `.env`. Es una imagen multi-stage: compila con Vite (`VITE_API_BASE_URL` queda incrustado en el bundle en ese paso) y sirve los estáticos resultantes con [`serve`](https://www.npmjs.com/package/serve) en el puerto 3006 — sin servidor de aplicación.
 
+En el VPS vive en **https://nexora.franciscolopez.uk/**, apuntando a la misma `nexora-api` real que usa `nexora-android`.
+
 ```bash
 docker compose up --build
 # http://localhost:3006
@@ -94,7 +96,7 @@ Login con JWT real contra `nexora-api` (B7): access token corto + refresh token 
 
 ## Estado del proyecto
 
-**W1 a W8 completos** — el roadmap original de `nexora-web` (`plan.md`, sección 9) está cerrado, y ya no queda ningún módulo "próximamente": login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias, de todas las cuentas juntas o filtrados a una), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas), reportes por rango de fechas, notificaciones (pagos y cuotas por vencer), configuración (cuenta, apariencia, idioma) y gestión completa de categorías (crear, renombrar, archivar). Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
+**W1 a W8 completos** — el roadmap original de `nexora-web` (`plan.md`, sección 9) está cerrado, y ya no queda ningún módulo "próximamente": login/registro reales contra `nexora-api`, layout con navegación, tema claro/oscuro persistido, i18n en español, el dashboard completo y personalizable, gestión de cuentas, movimientos (ingresos, gastos y transferencias, de todas las cuentas juntas o filtrados a una), tarjetas de crédito (alta, compras, pagos), compras a meses (MSI/MCI, con calendario de cuotas), reportes por rango de fechas, notificaciones (pagos y cuotas por vencer), configuración (cuenta, apariencia, idioma) y gestión completa de categorías (crear, renombrar, archivar). Desplegada en **https://nexora.franciscolopez.uk/**, contra la API real. Ver [`plan.md`](./plan.md) para el plan de desarrollo completo (roadmap, MVP y reglas de la app).
 
 ### Gráficas (dashboard)
 
