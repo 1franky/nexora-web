@@ -63,6 +63,9 @@ export default function CreditCardPaymentDialog({ open, cardId, cardAccountId, o
       queryClient.invalidateQueries({ queryKey: ['creditCard', cardId] })
       queryClient.invalidateQueries({ queryKey: ['transactions', cardAccountId] })
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
+      // Un pago puede marcar cuotas MSI/MCI del mes corriente como pagadas (nexora-api).
+      queryClient.invalidateQueries({ queryKey: ['installmentPlans', cardId] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       if (fromAccountId) queryClient.invalidateQueries({ queryKey: ['transactions', fromAccountId] })
       resetForm()
       onClose()
