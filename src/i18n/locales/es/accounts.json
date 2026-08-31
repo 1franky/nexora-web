@@ -3,6 +3,8 @@
   "newAccount": "Nueva cuenta",
   "empty": "Todavía no tienes cuentas. Crea la primera para empezar a registrar tus movimientos.",
   "loadError": "No se pudieron cargar tus cuentas.",
+  "searchLabel": "Buscar cuenta",
+  "searchEmpty": "Ninguna cuenta coincide con tu búsqueda.",
   "types": {
     "DEBIT": "Débito",
     "SAVINGS": "Ahorro",

@@ -3,6 +3,8 @@
   "newCard": "Nueva tarjeta",
   "empty": "Todavía no tienes tarjetas de crédito. Crea la primera para registrar tus compras y pagos.",
   "loadError": "No se pudieron cargar tus tarjetas.",
+  "searchLabel": "Buscar tarjeta",
+  "searchEmpty": "Ninguna tarjeta coincide con tu búsqueda.",
   "archived": "Archivada",
   "limit": "Límite",
   "debt": "Deuda",

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
@@ -11,9 +11,12 @@ import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
+import InputAdornment from '@mui/material/InputAdornment'
 import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
+import SearchIcon from '@mui/icons-material/Search'
 import { listAccounts } from '../api/accountsApi'
 import { formatCurrencyIn } from '../components/dataviz/format'
 import EmptyChartState from '../components/dataviz/EmptyChartState'
@@ -23,8 +26,15 @@ export default function AccountsPage() {
   const { t } = useTranslation('accounts')
   const navigate = useNavigate()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [search, setSearch] = useState('')
 
   const { data: accounts, isLoading, isError } = useQuery({ queryKey: ['accounts'], queryFn: listAccounts })
+
+  const filteredAccounts = useMemo(() => {
+    const query = search.trim().toLowerCase()
+    if (!query) return accounts
+    return accounts?.filter((account) => account.name.toLowerCase().includes(query))
+  }, [accounts, search])
 
   return (
     <Box>
@@ -48,8 +58,32 @@ export default function AccountsPage() {
       {accounts && accounts.length === 0 && <EmptyChartState message={t('empty')} />}
 
       {accounts && accounts.length > 0 && (
+        <TextField
+          size="small"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder={t('searchLabel')}
+          aria-label={t('searchLabel')}
+          sx={{ mb: 2, maxWidth: 320 }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      )}
+
+      {accounts && accounts.length > 0 && filteredAccounts && filteredAccounts.length === 0 && (
+        <EmptyChartState message={t('searchEmpty')} />
+      )}
+
+      {filteredAccounts && filteredAccounts.length > 0 && (
         <Grid container spacing={2}>
-          {accounts.map((account) => (
+          {filteredAccounts.map((account) => (
             <Grid key={account.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card
                 variant="outlined"
