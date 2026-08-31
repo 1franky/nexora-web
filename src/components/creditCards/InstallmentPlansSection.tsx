@@ -9,6 +9,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
+import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -18,11 +19,13 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import EditIcon from '@mui/icons-material/Edit'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { listInstallmentPlansForCard, payInstallment, type Installment, type InstallmentPlan } from '../../api/installmentsApi'
 import { getApiErrorMessage } from '../../api/apiError'
 import { formatCurrencyIn, formatDateShort } from '../dataviz/format'
 import EmptyChartState from '../dataviz/EmptyChartState'
+import EditInstallmentPlanDialog from './EditInstallmentPlanDialog'
 
 interface InstallmentPlansSectionProps {
   cardId: string
@@ -33,6 +36,7 @@ export default function InstallmentPlansSection({ cardId, currency }: Installmen
   const { t } = useTranslation('creditCards')
   const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
+  const [editingPlan, setEditingPlan] = useState<InstallmentPlan | null>(null)
 
   const { data: plans, isLoading, isError } = useQuery({
     queryKey: ['installmentPlans', cardId],
@@ -87,6 +91,16 @@ export default function InstallmentPlansSection({ cardId, currency }: Installmen
                 label={t(`installments.statuses.${plan.status}`)}
                 color={plan.status === 'ACTIVE' ? 'primary' : plan.status === 'COMPLETED' ? 'success' : 'default'}
               />
+              <IconButton
+                size="small"
+                aria-label={t('common:actions.edit')}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setEditingPlan(plan)
+                }}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
             </Stack>
           </AccordionSummary>
           <AccordionDetails>
@@ -151,6 +165,8 @@ export default function InstallmentPlansSection({ cardId, currency }: Installmen
           </AccordionDetails>
         </Accordion>
       ))}
+
+      <EditInstallmentPlanDialog plan={editingPlan} cardId={cardId} onClose={() => setEditingPlan(null)} />
     </Box>
   )
 }

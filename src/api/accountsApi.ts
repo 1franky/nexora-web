@@ -25,6 +25,12 @@ export interface CreateAccountRequest {
   includeInNetWorth: boolean
 }
 
+export interface UpdateAccountRequest {
+  name: string
+  includeInAvailableBalance: boolean
+  includeInNetWorth: boolean
+}
+
 export async function listAccounts(): Promise<Account[]> {
   const { data } = await apiClient.get<Account[]>('/accounts')
   return data
@@ -37,5 +43,10 @@ export async function getAccount(id: string): Promise<Account> {
 
 export async function createAccount(request: CreateAccountRequest): Promise<Account> {
   const { data } = await apiClient.post<Account>('/accounts', request)
+  return data
+}
+
+export async function updateAccount(id: string, request: UpdateAccountRequest): Promise<Account> {
+  const { data } = await apiClient.put<Account>(`/accounts/${id}`, request)
   return data
 }

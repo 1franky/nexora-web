@@ -11,22 +11,26 @@ import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
 import SearchIcon from '@mui/icons-material/Search'
-import { listCreditCards } from '../api/creditCardsApi'
+import { listCreditCards, type CreditCard } from '../api/creditCardsApi'
 import { formatCurrencyIn } from '../components/dataviz/format'
 import EmptyChartState from '../components/dataviz/EmptyChartState'
 import CreateCreditCardDialog from '../components/creditCards/CreateCreditCardDialog'
+import EditCreditCardDialog from '../components/creditCards/EditCreditCardDialog'
 
 export default function CreditCardsPage() {
   const { t } = useTranslation('creditCards')
   const navigate = useNavigate()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingCard, setEditingCard] = useState<CreditCard | null>(null)
   const [search, setSearch] = useState('')
 
   const { data: cards, isLoading, isError } = useQuery({ queryKey: ['creditCards'], queryFn: listCreditCards })
@@ -93,10 +97,21 @@ export default function CreditCardsPage() {
             const usage = card.creditLimit > 0 ? Math.min(100, (card.currentDebt / card.creditLimit) * 100) : 0
             return (
               <Grid key={card.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card variant="outlined" sx={{ height: '100%', opacity: card.status === 'ARCHIVED' ? 0.6 : 1 }}>
+                <Card variant="outlined" sx={{ height: '100%', opacity: card.status === 'ARCHIVED' ? 0.6 : 1, position: 'relative' }}>
+                  <IconButton
+                    size="small"
+                    aria-label={t('common:actions.edit')}
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      setEditingCard(card)
+                    }}
+                    sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
                   <CardActionArea onClick={() => navigate(`/credit-cards/${card.id}`)} sx={{ height: '100%' }}>
                     <CardContent>
-                      <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                      <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1, pr: 4 }}>
                         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                           {card.name}
                         </Typography>
@@ -130,6 +145,7 @@ export default function CreditCardsPage() {
       )}
 
       <CreateCreditCardDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      <EditCreditCardDialog card={editingCard} onClose={() => setEditingCard(null)} />
     </Box>
   )
 }

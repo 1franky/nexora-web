@@ -32,6 +32,11 @@ export interface InstallmentPlan {
   financedBalance: number
   nextInstallment: Installment | null
   installments: Installment[]
+  /** De la Transaction de la compra original — no viven en el plan, pero hacen falta para poder editarlo. */
+  merchant: string | null
+  categoryId: string | null
+  description: string | null
+  reference: string | null
 }
 
 export interface CreateInstallmentPlanRequest {
@@ -40,6 +45,17 @@ export interface CreateInstallmentPlanRequest {
   merchant: string
   installmentCount: number
   /** Tasa de interés simple mensual en porcentaje (ej. 2.5 = 2.5%/mes). 0 = MSI, >0 = MCI (lo decide el backend). */
+  interestRate: number
+  categoryId?: string
+  description?: string
+  reference?: string
+}
+
+export interface UpdateInstallmentPlanRequest {
+  amount: number
+  date: string
+  merchant: string
+  installmentCount: number
   interestRate: number
   categoryId?: string
   description?: string
@@ -58,5 +74,10 @@ export async function createInstallmentPlan(cardId: string, request: CreateInsta
 
 export async function payInstallment(planId: string, installmentId: string): Promise<InstallmentPlan> {
   const { data } = await apiClient.post<InstallmentPlan>(`/installment-plans/${planId}/installments/${installmentId}/pay`)
+  return data
+}
+
+export async function updateInstallmentPlan(planId: string, request: UpdateInstallmentPlanRequest): Promise<InstallmentPlan> {
+  const { data } = await apiClient.put<InstallmentPlan>(`/installment-plans/${planId}`, request)
   return data
 }
