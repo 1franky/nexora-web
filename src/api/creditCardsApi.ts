@@ -30,6 +30,23 @@ export interface CreateCreditCardRequest {
   currency: string
 }
 
+export interface UpdateCreditCardRequest {
+  name: string
+  bank: string
+  creditLimit: number
+  closingDay: number
+  paymentDueDay: number
+}
+
+export interface UpdateCreditCardPurchaseRequest {
+  amount: number
+  date: string
+  merchant: string
+  categoryId?: string
+  description?: string
+  reference?: string
+}
+
 export interface CreditCardPurchaseRequest {
   amount: number
   date: string
@@ -59,6 +76,20 @@ export async function getCreditCard(id: string): Promise<CreditCard> {
 
 export async function createCreditCard(request: CreateCreditCardRequest): Promise<CreditCard> {
   const { data } = await apiClient.post<CreditCard>('/credit-cards', request)
+  return data
+}
+
+export async function updateCreditCard(id: string, request: UpdateCreditCardRequest): Promise<CreditCard> {
+  const { data } = await apiClient.put<CreditCard>(`/credit-cards/${id}`, request)
+  return data
+}
+
+export async function updateCreditCardPurchase(
+  cardId: string,
+  transactionId: string,
+  request: UpdateCreditCardPurchaseRequest,
+): Promise<Transaction> {
+  const { data } = await apiClient.put<Transaction>(`/credit-cards/${cardId}/purchases/${transactionId}`, request)
   return data
 }
 

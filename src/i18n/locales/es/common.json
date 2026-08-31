@@ -22,7 +22,8 @@
   "actions": {
     "save": "Guardar",
     "cancel": "Cancelar",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "edit": "Editar"
   },
   "errors": {
     "generic": "Ocurrió un error. Intenta de nuevo."

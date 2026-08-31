@@ -11,21 +11,25 @@ import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
 import SearchIcon from '@mui/icons-material/Search'
-import { listAccounts } from '../api/accountsApi'
+import { listAccounts, type Account } from '../api/accountsApi'
 import { formatCurrencyIn } from '../components/dataviz/format'
 import EmptyChartState from '../components/dataviz/EmptyChartState'
 import CreateAccountDialog from '../components/accounts/CreateAccountDialog'
+import EditAccountDialog from '../components/accounts/EditAccountDialog'
 
 export default function AccountsPage() {
   const { t } = useTranslation('accounts')
   const navigate = useNavigate()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null)
   const [search, setSearch] = useState('')
 
   const { data: accounts, isLoading, isError } = useQuery({ queryKey: ['accounts'], queryFn: listAccounts })
@@ -87,11 +91,22 @@ export default function AccountsPage() {
             <Grid key={account.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card
                 variant="outlined"
-                sx={{ height: '100%', opacity: account.status === 'ARCHIVED' ? 0.6 : 1 }}
+                sx={{ height: '100%', opacity: account.status === 'ARCHIVED' ? 0.6 : 1, position: 'relative' }}
               >
+                <IconButton
+                  size="small"
+                  aria-label={t('common:actions.edit')}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    setEditingAccount(account)
+                  }}
+                  sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
                 <CardActionArea onClick={() => navigate(`/transactions?accountId=${account.id}`)} sx={{ height: '100%' }}>
                   <CardContent>
-                    <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                    <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1, pr: 4 }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                         {account.name}
                       </Typography>
@@ -122,6 +137,7 @@ export default function AccountsPage() {
       )}
 
       <CreateAccountDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      <EditAccountDialog account={editingAccount} onClose={() => setEditingAccount(null)} />
     </Box>
   )
 }

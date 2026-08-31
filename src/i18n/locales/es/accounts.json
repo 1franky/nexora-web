@@ -17,6 +17,9 @@
     "availableBalance": "Disponible",
     "netWorth": "Patrimonio"
   },
+  "editDialog": {
+    "title": "Editar cuenta"
+  },
   "dialog": {
     "title": "Nueva cuenta",
     "name": "Nombre",
