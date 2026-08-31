@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import Alert from '@mui/material/Alert'
@@ -63,6 +64,7 @@ const GRID_SIZE = {
 export default function DashboardPage() {
   const { t } = useTranslation('dashboard')
   const { user } = useAuth()
+  const navigate = useNavigate()
   // `monthInput` es lo que el campo muestra, siempre (para no pelear con la
   // edición nativa); `committedMonth` es lo que de verdad dispara la
   // consulta, y solo avanza cuando monthInput es un mes completo y válido.
@@ -105,15 +107,33 @@ export default function DashboardPage() {
       case 'netWorth':
         return <StatTile label={t('netWorth')} value={formatCurrency(dashboard.netWorth)} />
       case 'availableBalance':
-        return <StatTile label={t('availableBalance')} value={formatCurrency(dashboard.availableBalance)} />
+        return (
+          <StatTile
+            label={t('availableBalance')}
+            value={formatCurrency(dashboard.availableBalance)}
+            onClick={() => navigate('/accounts')}
+          />
+        )
       case 'creditCardDebt':
-        return <StatTile label={t('creditCardDebt')} value={formatCurrency(dashboard.creditCardDebt)} />
+        return (
+          <StatTile
+            label={t('creditCardDebt')}
+            value={formatCurrency(dashboard.creditCardDebt)}
+            onClick={() => navigate('/credit-cards')}
+          />
+        )
       case 'availableCredit':
         return <StatTile label={t('availableCredit')} value={formatCurrency(dashboard.availableCredit)} />
       case 'incomeThisMonth':
         return <StatTile label={t('monthSummary.incomeThisMonth')} value={formatCurrency(dashboard.incomeThisMonth)} />
       case 'expenseThisMonth':
-        return <StatTile label={t('monthSummary.expenseThisMonth')} value={formatCurrency(dashboard.expenseThisMonth)} />
+        return (
+          <StatTile
+            label={t('monthSummary.expenseThisMonth')}
+            value={formatCurrency(dashboard.expenseThisMonth)}
+            onClick={() => navigate('/transactions')}
+          />
+        )
       case 'monthlyBalance':
         return (
           <StatTile
@@ -185,7 +205,20 @@ export default function DashboardPage() {
             ) : (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {dashboard.upcomingPayments.map((payment) => (
-                  <Box key={payment.creditCardId} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box
+                    key={payment.creditCardId}
+                    onClick={() => navigate(`/credit-cards/${payment.creditCardId}`)}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      borderRadius: 1,
+                      mx: -1,
+                      px: 1,
+                      '&:hover': { bgcolor: 'action.hover' },
+                    }}
+                  >
                     <Box>
                       <Typography variant="body2">{payment.creditCardName}</Typography>
                       <Typography variant="caption" sx={{ color: 'text.secondary' }}>
