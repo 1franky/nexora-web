@@ -23,7 +23,8 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "retry": "Reintentar",
-    "edit": "Editar"
+    "edit": "Editar",
+    "delete": "Eliminar"
   },
   "errors": {
     "generic": "Ocurrió un error. Intenta de nuevo."

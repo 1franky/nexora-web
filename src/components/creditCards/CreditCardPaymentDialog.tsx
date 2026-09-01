@@ -39,8 +39,11 @@ export default function CreditCardPaymentDialog({ open, cardId, cardAccountId, o
   const [error, setError] = useState<string | null>(null)
 
   const { data: accounts } = useQuery({ queryKey: ['accounts'], queryFn: listAccounts, enabled: open })
-  // No se puede pagar una tarjeta con otra tarjeta (regla de negocio en nexora-api).
-  const eligibleAccounts = (accounts ?? []).filter((account) => account.status === 'ACTIVE' && account.type !== 'CREDIT_CARD')
+  // No se puede pagar una tarjeta con otra tarjeta, ni con una cuenta de retiro
+  // (AFORE/PPR) — regla de negocio en nexora-api (TransactionService.recordCreditCardPayment).
+  const eligibleAccounts = (accounts ?? []).filter(
+    (account) => account.status === 'ACTIVE' && account.type !== 'CREDIT_CARD' && account.type !== 'AFORE' && account.type !== 'PPR'
+  )
 
   const resetForm = () => {
     setFromAccountId('')

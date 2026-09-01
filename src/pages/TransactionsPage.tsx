@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import { Link as RouterLink, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
+import IconButton from '@mui/material/IconButton'
 import Link from '@mui/material/Link'
 import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
@@ -20,17 +21,42 @@ import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import { listAccounts } from '../api/accountsApi'
 import { listCategories } from '../api/categoriesApi'
-import { listTransactions, type Transaction } from '../api/transactionsApi'
+import { deleteTransaction, listTransactions, type Transaction } from '../api/transactionsApi'
+import { getApiErrorMessage } from '../api/apiError'
 import { formatCurrencyIn, formatDateShort } from '../components/dataviz/format'
 import EmptyChartState from '../components/dataviz/EmptyChartState'
+import ConfirmDialog from '../components/common/ConfirmDialog'
+import EditTransactionDialog from '../components/transactions/EditTransactionDialog'
 import TransactionFormDialog from '../components/transactions/TransactionFormDialog'
+
+/** Editar solo aplica a lo que este mismo diálogo "Nuevo movimiento" crea; transferencias se editan borrando/recreando. */
+const EDITABLE_TYPES = new Set(['INCOME', 'EXPENSE'])
+/** Compra/pago de tarjeta se gestionan desde el detalle de la tarjeta, no desde aquí. */
+const DELETABLE_TYPES = new Set(['INCOME', 'EXPENSE', 'TRANSFER'])
 
 export default function TransactionsPage() {
   const { t } = useTranslation('transactions')
+  const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  const [deletingTransaction, setDeletingTransaction] = useState<Transaction | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteTransaction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['accounts'] })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      setDeletingTransaction(null)
+    },
+    onError: (err) => setDeleteError(getApiErrorMessage(err, t('common:errors.generic'))),
+  })
 
   const { data: accounts, isLoading: accountsLoading, isError: accountsError } = useQuery({
     queryKey: ['accounts'],
@@ -140,6 +166,7 @@ export default function TransactionsPage() {
                   <TableCell>{t('columns.category')}</TableCell>
                   <TableCell>{t('columns.description')}</TableCell>
                   <TableCell align="right">{t('columns.amount')}</TableCell>
+                  <TableCell align="right" />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -169,6 +196,25 @@ export default function TransactionsPage() {
                       {transaction.balanceEffect >= 0 ? '+' : ''}
                       {formatCurrencyIn(transaction.balanceEffect, accountCurrencyById.get(transaction.accountId) ?? 'MXN')}
                     </TableCell>
+                    <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                      {EDITABLE_TYPES.has(transaction.type) && (
+                        <IconButton size="small" aria-label={t('common:actions.edit')} onClick={() => setEditingTransaction(transaction)}>
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                      {DELETABLE_TYPES.has(transaction.type) && (
+                        <IconButton
+                          size="small"
+                          aria-label={t('common:actions.delete')}
+                          onClick={() => {
+                            setDeleteError(null)
+                            setDeletingTransaction(transaction)
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -182,6 +228,20 @@ export default function TransactionsPage() {
         accounts={activeAccounts}
         defaultAccountId={accountId || undefined}
         onClose={() => setDialogOpen(false)}
+      />
+
+      <EditTransactionDialog transaction={editingTransaction} onClose={() => setEditingTransaction(null)} />
+
+      <ConfirmDialog
+        open={deletingTransaction !== null}
+        title={t('deleteDialog.title')}
+        description={t('deleteDialog.description', {
+          description: deletingTransaction?.description || deletingTransaction?.merchant || t(`types.${deletingTransaction?.type}`),
+        })}
+        error={deleteError}
+        loading={deleteMutation.isPending}
+        onCancel={() => setDeletingTransaction(null)}
+        onConfirm={() => deletingTransaction && deleteMutation.mutate(deletingTransaction.id)}
       />
     </Box>
   )
