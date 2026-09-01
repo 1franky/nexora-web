@@ -46,6 +46,15 @@ export interface CreateTransactionRequest {
   reference?: string
 }
 
+/** Solo INCOME/EXPENSE se editan por aquí — ver TransactionController en nexora-api. */
+export interface UpdateTransactionRequest {
+  amount: number
+  date: string
+  categoryId?: string
+  description?: string
+  reference?: string
+}
+
 export interface CreateTransferRequest {
   fromAccountId: string
   toAccountId: string
@@ -69,6 +78,15 @@ export async function listTransactions(accountId?: string): Promise<Transaction[
 export async function createTransaction(request: CreateTransactionRequest): Promise<Transaction> {
   const { data } = await apiClient.post<Transaction>('/transactions', request)
   return data
+}
+
+export async function updateTransaction(id: string, request: UpdateTransactionRequest): Promise<Transaction> {
+  const { data } = await apiClient.put<Transaction>(`/transactions/${id}`, request)
+  return data
+}
+
+export async function deleteTransaction(id: string): Promise<void> {
+  await apiClient.delete(`/transactions/${id}`)
 }
 
 export async function createTransfer(request: CreateTransferRequest): Promise<TransferResult> {

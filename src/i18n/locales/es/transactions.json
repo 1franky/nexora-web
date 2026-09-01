@@ -47,5 +47,12 @@
     "title": "Nueva categoría",
     "name": "Nombre",
     "create": "Crear"
+  },
+  "editDialog": {
+    "title": "Editar movimiento"
+  },
+  "deleteDialog": {
+    "title": "Eliminar movimiento",
+    "description": "¿Seguro que quieres eliminar \"{{description}}\"? Esta acción no se puede deshacer."
   }
 }
