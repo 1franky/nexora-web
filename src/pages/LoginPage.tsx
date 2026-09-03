@@ -22,10 +22,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(
+    (location.state as { passwordResetSuccess?: boolean })?.passwordResetSuccess ? t('resetPassword.success') : null,
+  )
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     setError(null)
+    setSuccessMessage(null)
     setIsSubmitting(true)
     try {
       await login(email, password)
@@ -45,6 +49,7 @@ export default function LoginPage() {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <Stack spacing={2}>
+          {successMessage && <Alert severity="success">{successMessage}</Alert>}
           {error && <Alert severity="error">{error}</Alert>}
           <TextField
             label={t('login.email')}
@@ -64,6 +69,11 @@ export default function LoginPage() {
             required
             fullWidth
           />
+          <Typography variant="body2" align="right">
+            <Link component={RouterLink} to="/forgot-password">
+              {t('login.forgotPassword')}
+            </Link>
+          </Typography>
           <Button type="submit" variant="contained" size="large" loading={isSubmitting} fullWidth>
             {t('login.submit')}
           </Button>
