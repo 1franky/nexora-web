@@ -1,0 +1,40 @@
+name: Deploy a VPS
+
+# Se dispara cuando el workflow "CI" (ci.yml) termina en main — no directo en
+# cada push, para nunca desplegar código que no compiló o no pasó los tests.
+# "workflow_dispatch" agrega además un botón "Run workflow" manual en GitHub,
+# útil para volver a desplegar sin necesidad de un commit nuevo.
+on:
+  workflow_run:
+    workflows: ['CI']
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Desplegar por SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          # -H (no -i): "sudo -u francisco -i <comando>" tiene un gotcha real
+          # de sudo — con -i y un comando final, sudo reconstruye el argv como
+          # un solo string ANTES de pasarlo al shell de login, perdiendo las
+          # comillas que agrupan este script multilínea (ver mismo fix en
+          # nexora-api/.github/workflows/deploy.yml, verificado a mano contra
+          # el VPS real). "-H" fija $HOME a la del usuario (igual que necesita
+          # git/docker) sin ese problema de reconstrucción de argv.
+          script: |
+            sudo -H -u francisco bash -c '
+              set -e
+              cd /home/francisco/docker/nexora/nexora-web
+              git pull origin main
+              docker compose up --build -d
+              docker image prune -f
+            '
