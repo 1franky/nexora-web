@@ -10,6 +10,7 @@ import AccountsPage from '../pages/AccountsPage'
 import TransactionsPage from '../pages/TransactionsPage'
 import CreditCardsPage from '../pages/CreditCardsPage'
 import CreditCardDetailPage from '../pages/CreditCardDetailPage'
+import SatInvoicesPage from '../pages/SatInvoicesPage'
 import ReportsPage from '../pages/ReportsPage'
 import CategoriesPage from '../pages/CategoriesPage'
 import NotificationsPage from '../pages/NotificationsPage'
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
           { path: '/transactions', element: <TransactionsPage /> },
           { path: '/credit-cards', element: <CreditCardsPage /> },
           { path: '/credit-cards/:id', element: <CreditCardDetailPage /> },
+          { path: '/invoices', element: <SatInvoicesPage /> },
           { path: '/reports', element: <ReportsPage /> },
           { path: '/categories', element: <CategoriesPage /> },
           { path: '/notifications', element: <NotificationsPage /> },

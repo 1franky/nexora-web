@@ -23,6 +23,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import CategoryIcon from '@mui/icons-material/Category'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -39,6 +40,7 @@ const NAV_ITEMS = [
   { to: '/accounts', labelKey: 'nav.accounts', icon: <AccountBalanceIcon /> },
   { to: '/transactions', labelKey: 'nav.transactions', icon: <SwapHorizIcon /> },
   { to: '/credit-cards', labelKey: 'nav.creditCards', icon: <CreditCardIcon /> },
+  { to: '/invoices', labelKey: 'nav.invoices', icon: <ReceiptLongIcon /> },
   { to: '/reports', labelKey: 'nav.reports', icon: <AssessmentIcon /> },
   { to: '/categories', labelKey: 'nav.categories', icon: <CategoryIcon /> },
   { to: '/notifications', labelKey: 'nav.notifications', icon: <NotificationsIcon /> },
