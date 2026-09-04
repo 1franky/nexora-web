@@ -1,0 +1,82 @@
+{
+  "connection": {
+    "heading": "Conexión SAT",
+    "subtitle": "Conecta tu e.firma para que Nexora descargue automáticamente tus facturas (CFDI) emitidas y recibidas.",
+    "loadError": "No se pudo consultar el estado de tu conexión SAT.",
+    "consent": {
+      "title": "Antes de continuar",
+      "body": "Tu e.firma (certificado .cer, llave .key y contraseña) es el dato más sensible que maneja Nexora: es legalmente equivalente a tu firma autógrafa ante el SAT. Se guarda cifrada en el servidor y se usa únicamente para consultar y descargar tus CFDI en el Web Service oficial de Descarga Masiva del SAT. Nunca se muestra en pantalla de nuevo una vez guardada, y puedes eliminarla por completo cuando quieras."
+    },
+    "form": {
+      "cerLabel": "Certificado (.cer)",
+      "keyLabel": "Llave privada (.key)",
+      "passwordLabel": "Contraseña de la e.firma",
+      "chooseFile": "Seleccionar archivo",
+      "noFileChosen": "Ningún archivo seleccionado",
+      "connect": "Conectar e.firma",
+      "connectHint": "Puede tardar unos segundos: se valida contra el SAT antes de guardar nada.",
+      "connectError": "No se pudo conectar tu e.firma. Verifica el certificado, la llave y la contraseña."
+    },
+    "status": {
+      "rfc": "RFC",
+      "validUntil": "Vigente hasta",
+      "lastSyncAt": "Última sincronización",
+      "neverSynced": "Todavía no se ha sincronizado",
+      "states": {
+        "ACTIVO": "Activa",
+        "ERROR_AUTENTICACION": "Error de autenticación",
+        "REVOCADO": "Revocada"
+      },
+      "authError": "Tu e.firma dejó de funcionar con el SAT (contraseña incorrecta, certificado revocado o vigencia expirada). Elimina esta conexión y vuelve a conectarla con tus datos actuales.",
+      "syncNow": "Sincronizar ahora",
+      "syncStarted": "Sincronización iniciada. Te avisaremos por notificaciones cuando termine.",
+      "syncError": "No se pudo iniciar la sincronización.",
+      "rangeSync": {
+        "heading": "Traer historial anterior",
+        "subtitle": "Trae facturas emitidas de un periodo específico (por ejemplo, de hace un año) que la sincronización automática no cubre. Solo aplica a facturas emitidas.",
+        "from": "Desde",
+        "to": "Hasta",
+        "submit": "Sincronizar rango",
+        "rangeInvalid": "La fecha inicial debe ser anterior o igual a la fecha final."
+      },
+      "disconnect": "Eliminar conexión",
+      "disconnectDialog": {
+        "title": "Eliminar conexión SAT",
+        "description": "Se borrará tu e.firma guardada (certificado, llave y contraseña) de forma permanente. Las facturas ya descargadas se conservan. Para volver a sincronizar tendrás que conectar tu e.firma de nuevo."
+      },
+      "disconnectError": "No se pudo eliminar la conexión."
+    }
+  },
+  "invoices": {
+    "title": "Facturas",
+    "subtitle": "Facturas (CFDI) descargadas desde el SAT.",
+    "filters": {
+      "type": "Tipo",
+      "allTypes": "Todas",
+      "from": "Desde",
+      "to": "Hasta",
+      "search": "Buscar por RFC, nombre o folio fiscal"
+    },
+    "types": {
+      "EMITIDAS": "Emitidas",
+      "RECIBIDAS": "Recibidas"
+    },
+    "columns": {
+      "fechaEmision": "Fecha",
+      "tipo": "Tipo",
+      "emisor": "Emisor",
+      "receptor": "Receptor",
+      "total": "Total",
+      "estadoSat": "Estado"
+    },
+    "estadoSat": {
+      "VIGENTE": "Vigente",
+      "CANCELADO": "Cancelado"
+    },
+    "downloadXml": "Descargar XML",
+    "downloadError": "No se pudo descargar el XML de esta factura.",
+    "empty": "No hay facturas que coincidan con los filtros.",
+    "loadError": "No se pudieron cargar las facturas.",
+    "rowsPerPage": "Filas por página"
+  }
+}

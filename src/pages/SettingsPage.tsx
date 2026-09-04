@@ -11,6 +11,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../auth/AuthContext'
 import { useThemeMode, type ThemeMode } from '../theme/ThemeModeContext'
+import SatConnectionSection from '../components/sat/SatConnectionSection'
 
 const THEME_OPTIONS: ThemeMode[] = ['light', 'dark']
 
@@ -25,7 +26,7 @@ export default function SettingsPage() {
         {t('title')}
       </Typography>
 
-      <Stack spacing={3} sx={{ maxWidth: 560, mt: 3 }}>
+      <Stack spacing={3} sx={{ maxWidth: 640, mt: 3 }}>
         <SectionCard title={t('account.heading')}>
           <Stack spacing={1.5}>
             <Field label={t('account.name')} value={user?.displayName ?? '—'} />
@@ -52,6 +53,10 @@ export default function SettingsPage() {
           <TextField select value="es" disabled fullWidth size="small" sx={{ maxWidth: 240 }}>
             <MenuItem value="es">Español</MenuItem>
           </TextField>
+        </SectionCard>
+
+        <SectionCard title={t('sat:connection.heading')} subtitle={t('sat:connection.subtitle')}>
+          <SatConnectionSection />
         </SectionCard>
       </Stack>
     </Box>
