@@ -121,6 +121,15 @@ export async function downloadSatInvoiceXml(id: string): Promise<Blob> {
 }
 
 /**
+ * PDF generado al vuelo por el backend a partir del XML ya guardado (representación
+ * impresa) — no reemplaza al XML (el documento fiscal en sí), ambos siguen disponibles.
+ */
+export async function downloadSatInvoicePdf(id: string): Promise<Blob> {
+  const { data } = await apiClient.get(`/sat/invoices/${id}/pdf`, { responseType: 'blob' })
+  return data
+}
+
+/**
  * True solo si `dateInput` (el `.value` de un `<input type="date">`) es una fecha real con año
  * de 4 dígitos. Un date picker nativo escrito con teclado puede dejar el campo en un valor
  * corrupto si el foco no avanza limpio entre día/mes/año (ej. "12026-01-01", con un dígito de

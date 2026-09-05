@@ -21,10 +21,12 @@ import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import DownloadIcon from '@mui/icons-material/Download'
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import SearchIcon from '@mui/icons-material/Search'
 import {
   dateInputToEndOfDayIso,
   dateInputToStartOfDayIso,
+  downloadSatInvoicePdf,
   downloadSatInvoiceXml,
   isValidDateInputValue,
   listSatInvoices,
@@ -36,6 +38,12 @@ import { formatCurrencyIn } from '../components/dataviz/format'
 import EmptyChartState from '../components/dataviz/EmptyChartState'
 
 const TYPES: CfdiInvoiceType[] = ['EMITIDAS', 'RECIBIDAS']
+
+type DownloadFormat = 'pdf' | 'xml'
+
+function downloadKey(invoiceId: string, format: DownloadFormat) {
+  return `${invoiceId}:${format}`
+}
 
 function triggerDownload(blob: Blob, filename: string) {
   const url = window.URL.createObjectURL(blob)
@@ -59,7 +67,7 @@ export default function SatInvoicesPage() {
   const [page, setPage] = useState(0)
   const [size, setSize] = useState(25)
   const [downloadError, setDownloadError] = useState<string | null>(null)
-  const [downloadingId, setDownloadingId] = useState<string | null>(null)
+  const [downloadingKey, setDownloadingKey] = useState<string | null>(null)
 
   // Buscador con debounce: evita disparar una petición por cada tecla.
   useEffect(() => {
@@ -93,13 +101,13 @@ export default function SatInvoicesPage() {
   })
 
   const downloadMutation = useMutation({
-    mutationFn: async (invoice: CfdiInvoice) => {
-      setDownloadingId(invoice.id)
-      const blob = await downloadSatInvoiceXml(invoice.id)
-      triggerDownload(blob, `${invoice.uuidFiscal}.xml`)
+    mutationFn: async ({ invoice, format }: { invoice: CfdiInvoice; format: DownloadFormat }) => {
+      setDownloadingKey(downloadKey(invoice.id, format))
+      const blob = format === 'pdf' ? await downloadSatInvoicePdf(invoice.id) : await downloadSatInvoiceXml(invoice.id)
+      triggerDownload(blob, `${invoice.uuidFiscal}.${format}`)
     },
     onError: (err) => setDownloadError(getApiErrorMessage(err, t('invoices.downloadError'))),
-    onSettled: () => setDownloadingId(null),
+    onSettled: () => setDownloadingKey(null),
   })
 
   const invoices = data?.content ?? []
@@ -234,15 +242,36 @@ export default function SatInvoicesPage() {
                       />
                     </TableCell>
                     <TableCell align="right">
+                      <Tooltip title={t('invoices.downloadPdf')}>
+                        <span>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            aria-label={t('invoices.downloadPdf')}
+                            disabled={downloadingKey === downloadKey(invoice.id, 'pdf')}
+                            onClick={() => downloadMutation.mutate({ invoice, format: 'pdf' })}
+                          >
+                            {downloadingKey === downloadKey(invoice.id, 'pdf') ? (
+                              <CircularProgress size={16} />
+                            ) : (
+                              <PictureAsPdfIcon fontSize="small" />
+                            )}
+                          </IconButton>
+                        </span>
+                      </Tooltip>
                       <Tooltip title={t('invoices.downloadXml')}>
                         <span>
                           <IconButton
                             size="small"
                             aria-label={t('invoices.downloadXml')}
-                            disabled={downloadingId === invoice.id}
-                            onClick={() => downloadMutation.mutate(invoice)}
+                            disabled={downloadingKey === downloadKey(invoice.id, 'xml')}
+                            onClick={() => downloadMutation.mutate({ invoice, format: 'xml' })}
                           >
-                            {downloadingId === invoice.id ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                            {downloadingKey === downloadKey(invoice.id, 'xml') ? (
+                              <CircularProgress size={16} />
+                            ) : (
+                              <DownloadIcon fontSize="small" />
+                            )}
                           </IconButton>
                         </span>
                       </Tooltip>

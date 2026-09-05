@@ -73,8 +73,9 @@
       "VIGENTE": "Vigente",
       "CANCELADO": "Cancelado"
     },
+    "downloadPdf": "Descargar PDF",
     "downloadXml": "Descargar XML",
-    "downloadError": "No se pudo descargar el XML de esta factura.",
+    "downloadError": "No se pudo descargar el archivo de esta factura.",
     "empty": "No hay facturas que coincidan con los filtros.",
     "loadError": "No se pudieron cargar las facturas.",
     "rowsPerPage": "Filas por página"
