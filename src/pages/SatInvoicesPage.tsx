@@ -26,6 +26,7 @@ import {
   dateInputToEndOfDayIso,
   dateInputToStartOfDayIso,
   downloadSatInvoiceXml,
+  isValidDateInputValue,
   listSatInvoices,
   type CfdiInvoice,
   type CfdiInvoiceType,
@@ -69,7 +70,9 @@ export default function SatInvoicesPage() {
     return () => clearTimeout(handle)
   }, [searchInput])
 
-  const rangeIsValid = (from === '' && to === '') || (from !== '' && to !== '' && from <= to)
+  const rangeIsValid =
+    (from === '' && to === '') ||
+    (from !== '' && to !== '' && isValidDateInputValue(from) && isValidDateInputValue(to) && from <= to)
 
   const desde = from && rangeIsValid ? dateInputToStartOfDayIso(from) : undefined
   const hasta = to && rangeIsValid ? dateInputToEndOfDayIso(to) : undefined
@@ -138,7 +141,7 @@ export default function SatInvoicesPage() {
             setFrom(event.target.value)
             setPage(0)
           }}
-          slotProps={{ inputLabel: { shrink: true } }}
+          slotProps={{ inputLabel: { shrink: true }, htmlInput: { max: '9999-12-31' } }}
         />
         <TextField
           type="date"
@@ -149,7 +152,7 @@ export default function SatInvoicesPage() {
             setTo(event.target.value)
             setPage(0)
           }}
-          slotProps={{ inputLabel: { shrink: true } }}
+          slotProps={{ inputLabel: { shrink: true }, htmlInput: { max: '9999-12-31' } }}
         />
         <TextField
           size="small"
