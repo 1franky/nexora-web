@@ -61,6 +61,19 @@ export interface SatSyncRange {
   hasta?: string
 }
 
+/** Espejo de com.nexora.api.sat.web.SatContraparteResponse (nexora-api). */
+export interface SatContraparteResponse {
+  id: string
+  rfc: string
+  alias: string | null
+}
+
+/** Espejo de com.nexora.api.sat.web.CreateSatContraparteRequest (nexora-api). */
+export interface CreateSatContraparteRequest {
+  rfc: string
+  alias?: string
+}
+
 /**
  * GET .../sat/certificate responde 404 cuando el usuario no tiene ninguna
  * e.firma conectada — se traduce a `null` en vez de propagar el error, para
@@ -118,6 +131,25 @@ export async function listSatInvoices(filters: SatInvoiceFilters): Promise<Page<
 export async function downloadSatInvoiceXml(id: string): Promise<Blob> {
   const { data } = await apiClient.get(`/sat/invoices/${id}/xml`, { responseType: 'blob' })
   return data
+}
+
+/**
+ * El SAT exige el RFC del emisor específico para descargar RECIBIDAS (no existe
+ * "traer todo lo que me facturaron"): estos RFC son los que la sync automática
+ * usa para pedir recibidas, uno por uno.
+ */
+export async function listSatContrapartes(): Promise<SatContraparteResponse[]> {
+  const { data } = await apiClient.get<SatContraparteResponse[]>('/sat/contrapartes')
+  return data
+}
+
+export async function createSatContraparte(request: CreateSatContraparteRequest): Promise<SatContraparteResponse> {
+  const { data } = await apiClient.post<SatContraparteResponse>('/sat/contrapartes', request)
+  return data
+}
+
+export async function deleteSatContraparte(id: string): Promise<void> {
+  await apiClient.delete(`/sat/contrapartes/${id}`)
 }
 
 /** "2026-08-15" (input type="date") -> "2026-08-15T00:00:00.000Z" en hora local del navegador. */

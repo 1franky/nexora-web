@@ -44,7 +44,23 @@
         "title": "Eliminar conexión SAT",
         "description": "Se borrará tu e.firma guardada (certificado, llave y contraseña) de forma permanente. Las facturas ya descargadas se conservan. Para volver a sincronizar tendrás que conectar tu e.firma de nuevo."
       },
-      "disconnectError": "No se pudo eliminar la conexión."
+      "disconnectError": "No se pudo eliminar la conexión.",
+      "contrapartes": {
+        "heading": "RFC de contraparte para facturas recibidas",
+        "subtitle": "El SAT exige el RFC del emisor específico para poder descargar tus facturas recibidas — no existe forma de pedir \"todo lo que me han facturado\" en una sola solicitud. Registra aquí el RFC de tu empleador, proveedores de servicios, etc. para que la sincronización automática traiga sus facturas.",
+        "loadError": "No se pudieron cargar los RFC registrados.",
+        "empty": "Todavía no has registrado ningún RFC.",
+        "rfcLabel": "RFC",
+        "aliasLabel": "Alias (opcional)",
+        "add": "Agregar",
+        "addError": "No se pudo agregar el RFC.",
+        "delete": "Eliminar",
+        "deleteError": "No se pudo eliminar el RFC.",
+        "deleteDialog": {
+          "title": "Eliminar RFC de contraparte",
+          "description": "Se dejará de sincronizar facturas recibidas de este RFC. Las facturas ya descargadas se conservan."
+        }
+      }
     }
   },
   "invoices": {
