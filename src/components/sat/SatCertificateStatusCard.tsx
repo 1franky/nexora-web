@@ -16,6 +16,7 @@ import {
   dateInputToEndOfDayIso,
   dateInputToStartOfDayIso,
   disconnectSatCertificate,
+  isValidDateInputValue,
   syncSat,
   type SatCertificate,
   type SatCertificateStatus,
@@ -89,7 +90,12 @@ export default function SatCertificateStatusCard({ certificate }: { certificate:
     onError: (err) => setDisconnectError(getApiErrorMessage(err, t('connection.status.disconnectError'))),
   })
 
-  const rangeValid = rangeFrom !== '' && rangeTo !== '' && rangeFrom <= rangeTo
+  const rangeValid =
+    rangeFrom !== '' &&
+    rangeTo !== '' &&
+    isValidDateInputValue(rangeFrom) &&
+    isValidDateInputValue(rangeTo) &&
+    rangeFrom <= rangeTo
 
   return (
     <Stack spacing={2.5}>
@@ -151,7 +157,7 @@ export default function SatCertificateStatusCard({ certificate }: { certificate:
             label={t('connection.status.rangeSync.from')}
             value={rangeFrom}
             onChange={(event) => setRangeFrom(event.target.value)}
-            slotProps={{ inputLabel: { shrink: true } }}
+            slotProps={{ inputLabel: { shrink: true }, htmlInput: { max: '9999-12-31' } }}
           />
           <TextField
             type="date"
@@ -159,7 +165,7 @@ export default function SatCertificateStatusCard({ certificate }: { certificate:
             label={t('connection.status.rangeSync.to')}
             value={rangeTo}
             onChange={(event) => setRangeTo(event.target.value)}
-            slotProps={{ inputLabel: { shrink: true } }}
+            slotProps={{ inputLabel: { shrink: true }, htmlInput: { max: '9999-12-31' } }}
           />
           <Button
             variant="outlined"

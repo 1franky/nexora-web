@@ -120,6 +120,21 @@ export async function downloadSatInvoiceXml(id: string): Promise<Blob> {
   return data
 }
 
+/**
+ * True solo si `dateInput` (el `.value` de un `<input type="date">`) es una fecha real con año
+ * de 4 dígitos. Un date picker nativo escrito con teclado puede dejar el campo en un valor
+ * corrupto si el foco no avanza limpio entre día/mes/año (ej. "12026-01-01", con un dígito de
+ * más en el año) — ese valor sigue comparando bien como string (`from <= to`), así que sin este
+ * chequeo se cuela a dateInputToStartOfDayIso/EndOfDayIso, que revientan con "RangeError: Invalid
+ * time value" cuando el año ni siquiera arma una fecha válida, o silenciosamente arman un rango
+ * de fechas absurdo (año técnicamente válido para Date, pero disparatado) que nunca encuentra
+ * nada — reportado como "el filtro de facturas no encuentra ninguna".
+ */
+export function isValidDateInputValue(dateInput: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateInput)) return false
+  return !Number.isNaN(new Date(`${dateInput}T00:00:00`).getTime())
+}
+
 /** "2026-08-15" (input type="date") -> "2026-08-15T00:00:00.000Z" en hora local del navegador. */
 export function dateInputToStartOfDayIso(dateInput: string): string {
   return new Date(`${dateInput}T00:00:00`).toISOString()
