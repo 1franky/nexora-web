@@ -66,6 +66,25 @@ npm run build           # type-check (tsc) + build de producción a dist/
 npm run lint            # oxlint
 ```
 
+## Flujo de ramas y despliegue
+
+`main` está protegida (sin push directo ni para admins, PR obligatorio, requiere el check `build` de CI en verde) porque cada merge ahí dispara el deploy automático a VPS (`deploy.yml`, ver abajo). `develop` es la rama por defecto y de integración: los desarrollos nuevos salen de `feature/...` ramas desde `develop`, se mergean de vuelta a `develop` vía PR (CI corre igual, pero no despliega nada), y cuando hay suficiente acumulado se abre un PR de `develop` → `main` para liberar todo junto. Mismo flujo que en [`nexora-api`](https://github.com/1franky/nexora-api#flujo-de-ramas-y-despliegue).
+
+**Hotfix urgente en producción** (un bug que no puede esperar al ciclo normal de `develop`):
+
+1. Rama desde `main` (no desde `develop`, que puede traer trabajo a medio terminar):
+   ```bash
+   git checkout main && git pull origin main
+   git checkout -b hotfix/nombre-del-bug
+   ```
+2. Arreglar, commitear, PR de `hotfix/nombre-del-bug` → `main`. Al mergear, CI + deploy corren igual que cualquier merge a `main`: el fix llega a producción de inmediato.
+3. Traer el fix de vuelta a `develop` para que no se pierda ni se revierta sin querer en el próximo `develop` → `main`:
+   ```bash
+   git checkout develop && git pull origin develop
+   git merge main
+   git push origin develop
+   ```
+
 ## Despliegue con Docker
 
 Mismo `compose.yaml` en desarrollo y en el VPS; lo que cambia es el `.env`. Es una imagen multi-stage: compila con Vite (`VITE_API_BASE_URL` queda incrustado en el bundle en ese paso) y sirve los estáticos resultantes con [`serve`](https://www.npmjs.com/package/serve) en el puerto 3006 — sin servidor de aplicación.
