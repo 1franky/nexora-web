@@ -64,3 +64,11 @@ export function formatCurrencyIn(value: number, currencyCode: string): string {
   }
   return formatter ? formatter.format(value) : `${value.toFixed(2)} ${currencyCode}`
 }
+
+const dateWithYearFormatter = new Intl.DateTimeFormat('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
+
+/** "2027-03-03" -> "3 mar 2027" — cuando la fecha puede caer en otro año (p. ej. un cargo anual). */
+export function formatDateWithYear(isoDate: string): string {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  return dateWithYearFormatter.format(new Date(year, month - 1, day)).replace('.', '')
+}

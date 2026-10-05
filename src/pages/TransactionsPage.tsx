@@ -32,6 +32,9 @@ import EmptyChartState from '../components/dataviz/EmptyChartState'
 import ConfirmDialog from '../components/common/ConfirmDialog'
 import EditTransactionDialog from '../components/transactions/EditTransactionDialog'
 import TransactionFormDialog from '../components/transactions/TransactionFormDialog'
+import ScheduledBadge from '../components/scheduledCharges/ScheduledBadge'
+import ScheduledChargesSection from '../components/scheduledCharges/ScheduledChargesSection'
+import { isEligibleAccount } from '../components/scheduledCharges/schedule'
 
 /** Editar solo aplica a lo que este mismo diálogo "Nuevo movimiento" crea; transferencias se editan borrando/recreando. */
 const EDITABLE_TYPES = new Set(['INCOME', 'EXPENSE'])
@@ -144,6 +147,13 @@ export default function TransactionsPage() {
         )}
       </Stack>
 
+      {/* Con una cuenta elegida, esta página hace de «detalle de la cuenta» (es a donde lleva la tarjeta en Cuentas). */}
+      {selectedAccount && selectedAccount.type !== 'AFORE' && selectedAccount.type !== 'PPR' && (
+        <Box sx={{ mb: 4 }}>
+          <ScheduledChargesSection accountId={selectedAccount.id} canCreate={isEligibleAccount(selectedAccount)} />
+        </Box>
+      )}
+
       {transactionsLoading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
           <CircularProgress />
@@ -175,7 +185,10 @@ export default function TransactionsPage() {
                     <TableCell>{formatDateShort(transaction.date)}</TableCell>
                     {!accountId && <TableCell>{accountNameById.get(transaction.accountId) ?? '—'}</TableCell>}
                     <TableCell>
-                      <Chip size="small" variant="outlined" label={t(`types.${transaction.type}`)} />
+                      <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+                        <Chip size="small" variant="outlined" label={t(`types.${transaction.type}`)} />
+                        {transaction.scheduledChargeId && <ScheduledBadge />}
+                      </Stack>
                     </TableCell>
                     <TableCell>
                       {transaction.categoryId

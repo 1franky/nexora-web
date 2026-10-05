@@ -36,6 +36,8 @@ import CreditCardPaymentDialog from '../components/creditCards/CreditCardPayment
 import CreateInstallmentPlanDialog from '../components/creditCards/CreateInstallmentPlanDialog'
 import EditCreditCardPurchaseDialog from '../components/creditCards/EditCreditCardPurchaseDialog'
 import InstallmentPlansSection from '../components/creditCards/InstallmentPlansSection'
+import ScheduledBadge from '../components/scheduledCharges/ScheduledBadge'
+import ScheduledChargesSection from '../components/scheduledCharges/ScheduledChargesSection'
 
 export default function CreditCardDetailPage() {
   const { t } = useTranslation('creditCards')
@@ -143,6 +145,10 @@ export default function CreditCardDetailPage() {
         <InstallmentPlansSection cardId={card.id} currency={card.currency} />
       </Box>
 
+      <Box sx={{ mb: 4 }}>
+        <ScheduledChargesSection accountId={card.accountId} canCreate={card.status === 'ACTIVE'} />
+      </Box>
+
       <Typography variant="h6" component="h2" gutterBottom>
         {t('detail.movements')}
       </Typography>
@@ -178,11 +184,14 @@ export default function CreditCardDetailPage() {
                     <TableRow key={transaction.id}>
                       <TableCell>{formatDateShort(transaction.date)}</TableCell>
                       <TableCell>
-                        <Chip
-                          size="small"
-                          variant="outlined"
-                          label={t(`types.${transaction.type}`, { defaultValue: transaction.type })}
-                        />
+                        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+                          <Chip
+                            size="small"
+                            variant="outlined"
+                            label={t(`types.${transaction.type}`, { defaultValue: transaction.type })}
+                          />
+                          {transaction.scheduledChargeId && <ScheduledBadge />}
+                        </Stack>
                       </TableCell>
                       <TableCell>
                         {transaction.merchant ??

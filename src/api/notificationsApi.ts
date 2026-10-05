@@ -7,6 +7,8 @@ export type NotificationType =
   | 'INSTALLMENT_DUE'
   | 'BUDGET_EXCEEDED'
   | 'UNUSUAL_EXPENSE'
+  | 'SCHEDULED_CHARGE_POSTED'
+  | 'SCHEDULED_CHARGE_FAILED'
 
 export type NotificationStatus = 'UNREAD' | 'READ'
 
