@@ -1,3 +1,4 @@
+import { Link as RouterLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Alert from '@mui/material/Alert'
@@ -6,6 +7,7 @@ import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
+import Link from '@mui/material/Link'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -17,6 +19,8 @@ import Typography from '@mui/material/Typography'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import DoneAllIcon from '@mui/icons-material/DoneAll'
+import EventBusyIcon from '@mui/icons-material/EventBusy'
+import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 import {
@@ -32,6 +36,8 @@ import EmptyChartState from '../components/dataviz/EmptyChartState'
 
 function iconFor(type: NotificationType) {
   if (type === 'INSTALLMENT_DUE') return <CalendarMonthIcon />
+  if (type === 'SCHEDULED_CHARGE_POSTED') return <EventRepeatIcon />
+  if (type === 'SCHEDULED_CHARGE_FAILED') return <EventBusyIcon />
   if (type === 'PAYMENT_DUE' || type === 'PAYMENT_DUE_SOON' || type === 'PAYMENT_OVERDUE') return <CreditCardIcon />
   return <NotificationsIcon />
 }
@@ -124,6 +130,9 @@ function NotificationRow({
 }) {
   const { t } = useTranslation('notifications')
   const isUnread = notification.status === 'UNREAD'
+  const isScheduledCharge = notification.type === 'SCHEDULED_CHARGE_POSTED' || notification.type === 'SCHEDULED_CHARGE_FAILED'
+  // Un cargo que no se pudo registrar quedó pausado y requiere acción del usuario: se resalta como advertencia.
+  const iconColor = !isUnread ? 'text.disabled' : notification.type === 'SCHEDULED_CHARGE_FAILED' ? 'warning.main' : 'primary.main'
 
   return (
     <ListItem
@@ -141,7 +150,7 @@ function NotificationRow({
         )
       }
     >
-      <ListItemIcon sx={{ color: isUnread ? 'primary.main' : 'text.disabled' }}>{iconFor(notification.type)}</ListItemIcon>
+      <ListItemIcon sx={{ color: iconColor }}>{iconFor(notification.type)}</ListItemIcon>
       <ListItemText
         primary={
           <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
@@ -159,6 +168,11 @@ function NotificationRow({
             <Typography component="span" variant="caption" sx={{ color: 'text.disabled' }}>
               {formatDateShort(notification.createdAt.slice(0, 10))}
             </Typography>
+            {isScheduledCharge && (
+              <Link component={RouterLink} to="/scheduled-charges" variant="caption" sx={{ ml: 1.5 }}>
+                {t('scheduledCharges:notifications.viewLink')}
+              </Link>
+            )}
           </>
         }
       />

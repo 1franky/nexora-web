@@ -32,6 +32,8 @@ export interface Transaction {
   transferGroupId: string | null
   counterAccountId: string | null
   merchant: string | null
+  /** Si lo generó un cargo programado (B14); sirve para mostrar el distintivo «Programado». */
+  scheduledChargeId: string | null
   status: TransactionStatus
   createdAt: string
 }

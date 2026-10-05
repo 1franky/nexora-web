@@ -12,6 +12,7 @@ import notifications from './locales/es/notifications.json'
 import settings from './locales/es/settings.json'
 import categories from './locales/es/categories.json'
 import sat from './locales/es/sat.json'
+import scheduledCharges from './locales/es/scheduledCharges.json'
 
 /**
  * Solo español por ahora (plan.md, sección 17.3), con namespaces por
@@ -23,7 +24,7 @@ void i18next
   .use(initReactI18next)
   .init({
     resources: {
-      es: { common, auth, dashboard, accounts, transactions, creditCards, reports, notifications, settings, categories, sat },
+      es: { common, auth, dashboard, accounts, transactions, creditCards, reports, notifications, settings, categories, sat, scheduledCharges },
     },
     lng: 'es',
     fallbackLng: 'es',
@@ -39,6 +40,7 @@ void i18next
       'settings',
       'categories',
       'sat',
+      'scheduledCharges',
     ],
     defaultNS: 'common',
     interpolation: { escapeValue: false },
