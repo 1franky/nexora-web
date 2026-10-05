@@ -1,0 +1,84 @@
+{
+  "title": "Cargos programados",
+  "subtitle": "Suscripciones y domiciliaciones que se registran solas cada mes o cada año.",
+  "newCharge": "Nuevo cargo programado",
+  "empty": "Todavía no tienes cargos programados. Crea uno para que tus suscripciones y domiciliaciones se registren solas.",
+  "emptyForAccount": "Esta cuenta no tiene cargos programados.",
+  "loadError": "No se pudieron cargar los cargos programados.",
+  "badge": "Programado",
+  "badgeHint": "Lo registró automáticamente un cargo programado.",
+  "frequencyLabel": {
+    "MONTHLY": "Cada día {{day}}",
+    "YEARLY": "Cada {{day}} de {{month}}"
+  },
+  "frequencies": {
+    "MONTHLY": "Mensual",
+    "YEARLY": "Anual"
+  },
+  "statuses": {
+    "ACTIVE": "Activo",
+    "PAUSED": "Pausado",
+    "FINISHED": "Terminado",
+    "CANCELLED": "Cancelado"
+  },
+  "columns": {
+    "name": "Nombre",
+    "account": "Cuenta",
+    "amount": "Monto",
+    "frequency": "Frecuencia",
+    "nextRun": "Próximo cargo",
+    "status": "Estado"
+  },
+  "noNextRun": "—",
+  "endsOn": "Hasta el {{date}}",
+  "pausedReason": "Pausado automáticamente: {{reason}}",
+  "actions": {
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "edit": "Editar",
+    "cancel": "Cancelar cargo"
+  },
+  "resumeHint": "Sigue desde hoy: lo que habría tocado mientras estuvo pausado no se registra.",
+  "cancelDialog": {
+    "title": "Cancelar cargo programado",
+    "description": "¿Seguro que quieres cancelar \"{{name}}\"? Ya no se registrarán más cargos, pero los movimientos que ya generó se conservan.",
+    "confirm": "Cancelar cargo"
+  },
+  "dialog": {
+    "createTitle": "Nuevo cargo programado",
+    "editTitle": "Editar cargo programado",
+    "editHint": "Los cambios solo aplican a los próximos cargos: los movimientos ya registrados no cambian.",
+    "account": "Cuenta",
+    "accountHint": "Tarjeta de crédito: se registra como compra. Débito o ahorro: como gasto.",
+    "noEligibleAccounts": "Necesitas una cuenta activa de débito, ahorro o tarjeta de crédito.",
+    "name": "Nombre",
+    "namePlaceholder": "Ej. Disney+, gimnasio",
+    "amount": "Monto",
+    "category": "Categoría",
+    "noCategoryOption": "Sin categoría",
+    "newCategoryOption": "+ Nueva categoría…",
+    "description": "Descripción (opcional)",
+    "frequency": "Frecuencia",
+    "dayOfMonth": "Día del mes",
+    "dayOfMonthHint": "Si el mes no tiene ese día, se cargará el último día del mes.",
+    "monthOfYear": "Mes",
+    "startDate": "Fecha de inicio",
+    "startDateHint": "El primer cargo será el {{date}}.",
+    "startDateLocked": "No se puede cambiar: este cargo ya generó movimientos.",
+    "endDate": "Fecha de fin (opcional)",
+    "endDateHint": "Inclusive. Déjala vacía si no tiene fin.",
+    "endBeforeStart": "La fecha de fin no puede ser anterior a la de inicio.",
+    "noOccurrenceInRange": "No cae ningún cargo entre la fecha de inicio y la de fin.",
+    "backdatedWarning_one": "Se registrará {{count}} cargo atrasado en cuanto guardes.",
+    "backdatedWarning_many": "Se registrarán {{count}} cargos atrasados en cuanto guardes.",
+    "backdatedWarning_other": "Se registrarán {{count}} cargos atrasados en cuanto guardes.",
+    "create": "Crear cargo"
+  },
+  "accountSection": {
+    "heading": "Cargos programados",
+    "new": "Nuevo cargo programado"
+  },
+  "notifications": {
+    "viewLink": "Ver cargos programados"
+  }
+}
